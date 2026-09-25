@@ -164,6 +164,19 @@ body.picking #btn-pick { background: var(--then); border-color: var(--then); col
 .progress > div { height: 100%; width: 0; background: var(--then); transition: width .2s; }
 .progress.done { visibility: hidden; }
 
+.hist-filters { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 12px; }
+.chip { display: inline-flex; align-items: center; gap: 5px; border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px 3px 7px; font-size: 13px; cursor: pointer; background: var(--panel-2); }
+.chip input { accent-color: var(--then); margin: 0; }
+.hist-list li .dot.ev { border-radius: 3px; background: var(--ev, #7a5c8e); }
+.hist-list li.kind-occupation, .hist-list li.kind-repression, .hist-list li.kind-war { --ev: #a0432f; }
+.hist-list li.kind-state { --ev: var(--now); }
+.hist-list li.kind-peace { --ev: #3d8a5f; }
+.hist-list li.kind-disaster { --ev: #6b6f73; }
+.hist-list li.event .what { font-weight: 500; }
+.hist-list li .ev-d { margin-top: 5px; font-size: 14px; line-height: 1.4; max-width: 60ch; }
+.hist-list li .ev-d a { white-space: nowrap; }
+.here-ev { font-weight: 400; font-size: 13.5px; margin-top: 3px; color: var(--ink); }
+.here-ev b { font-weight: 600; }
 .hist-list { list-style: none; margin: 0; padding: 0; position: relative; }
 .hist-list::before { content: ""; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 2px; background: var(--line); }
 .hist-list li {

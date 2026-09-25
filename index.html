@@ -77,8 +77,13 @@
     </div>
 
     <div class="tab-body" id="body-history" role="tabpanel" aria-labelledby="tab-history" data-body="history">
-      <p class="lede">Kokiai valstybei ar kultūrai tavo vieta priklausė per visą istoriją ir kokie seni žemėlapiai ją rodo. Paspausk eilutę ir žemėlapis persikels į tą laiką.</p>
+      <p class="lede">Kokiai valstybei ar kultūrai tavo vieta priklausė per visą istoriją, kas čia vyko ir kokie seni žemėlapiai ją rodo. Paspausk eilutę ir žemėlapis persikels į tą laiką.</p>
       <div id="hist-progress" class="progress"><div></div></div>
+      <div class="hist-filters" role="group" aria-label="Ką rodyti sąraše">
+        <label class="chip"><input type="checkbox" id="flt-hist" checked> Valstybės</label>
+        <label class="chip"><input type="checkbox" id="flt-maps" checked> Senieji žemėlapiai</label>
+        <label class="chip"><input type="checkbox" id="flt-events" checked> Įvykiai<span id="flt-events-n"></span></label>
+      </div>
       <ol id="hist-list" class="hist-list"></ol>
       <p class="source">Sienos: <a href="https://github.com/aourednik/historical-basemaps" target="_blank" rel="noopener">historical-basemaps</a> (A. Ourednik, GPL-3.0). Senųjų laikų ribos apytikslės. „Artimiausia sritis“ reiškia, kad supaprastintos pakrantės nepasiekė tavo taško ir parodyta artimiausia valstybė iki 25 km.</p>
     </div>
@@ -111,6 +116,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="regional.js"></script>
+<script src="events.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

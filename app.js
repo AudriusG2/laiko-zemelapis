@@ -28,8 +28,14 @@ const LT = {
   'Lithuania': (y) => (y < 1795 ? 'Lietuvos Didžioji Kunigaikštystė' : y < 1945 ? 'Lietuvos Respublika' : 'Lietuva'),
   'Poland-Lithuania': (y) => (y < 1569 ? 'Lenkija ir Lietuva (unija)' : 'Abiejų Tautų Respublika'),
   'Polish–Lithuanian Commonwealth': 'Abiejų Tautų Respublika',
-  'Poland': (y) => (y >= 1569 && y < 1795 ? 'Abiejų Tautų Respublika' : 'Lenkija'),
-  'Russian Empire': 'Rusijos imperija', 'Russia': 'Rusija', 'USSR': 'Sovietų Sąjunga (SSRS)',
+  'Poland': (y, c) => (y >= 1569 && y < 1795 ? 'Abiejų Tautų Respublika'
+    : y >= 1920 && y < 1939 && c && c.now === 'Lithuania' ? 'Lenkijos okupuotas Vilniaus kraštas' : 'Lenkija'),
+  'Russian Empire': 'Rusijos imperija', 'Russia': 'Rusija',
+  // The Baltic states were occupied, not ordinary Soviet republics (c.now = the present-day country).
+  'USSR': (y, c) => {
+    const occ = { Lithuania: 'Lietuvos', Latvia: 'Latvijos', Estonia: 'Estijos' }[c && c.now];
+    return occ && y < 1991 ? `${occ} TSR (sovietinė okupacija)` : 'Sovietų Sąjunga (SSRS)';
+  },
   'Germany': 'Vokietija', 'German Empire': 'Vokietijos imperija', 'Prussia': 'Prūsija', 'East Prussia': 'Rytų Prūsija',
   'Teutonic Knights': 'Kryžiuočių ordinas', 'Latvia': 'Latvija', 'Estonia': 'Estija',
   'Byelarus': 'Baltarusija', 'White Russia': (y) => (y === 1930 ? 'Sovietų Sąjunga (SSRS)' : 'Baltarusijos SSR'),
@@ -181,6 +187,14 @@ FAMOUS.sort((a, b) => a.y - b.y);
 // personal or local use appear only when the app runs on this computer.
 const IS_LOCAL = location.protocol === 'file:' || ['localhost', '127.0.0.1', '[::1]', ''].includes(location.hostname);
 const REGIONAL = (window.REGIONAL_MAPS || []).filter((r) => IS_LOCAL || r.license === 'open');
+
+// Historical events (events.js). scope: 'lt' present-day Lithuania, 'ie' island of Ireland,
+// 'ni' Northern Ireland, 'roi' Republic of Ireland, 'near' within near[2] km of [near[0], near[1]].
+const EVENTS = (window.EVENTS || []).map((e, i) => ({ ...e, i }));
+const EVENT_KIND = {
+  state: 'Valstybė', war: 'Karas', occupation: 'Okupacija', repression: 'Represijos',
+  culture: 'Kultūra', disaster: 'Nelaimė', peace: 'Taika', other: 'Įvykis',
+};
 
 // ---------- Helpers --------------------------------------------------------
 
@@ -399,11 +413,14 @@ function hereAt(year) {
 // Northern Ireland; coastal places use the nearest 1938 polygon like every other year).
 function placeCtx(lat, lng) {
   const bi = lat > 49.85 && lat < 61 && lng > -11 && lng < 1.8 && !(lat < 50.2 && lng > -1) && !(lat < 51.05 && lng > 1.4);
+  const i10 = idxCache.get(2010);
+  const h10 = i10 ? lookup(i10, lat, lng) : null;
+  const now = (h10 && h10.e.name) || null;
   const ie = lat > 51.38 && lat < 55.46 && lng > -10.76 && lng < -5.39 && !(lat > 55.25 && lng > -6.05) && !(lat < 52.0 && lng > -6.0);
-  if (!ie) return { ie: false, bi };
+  if (!ie) return { ie: false, bi, now };
   const idx = idxCache.get(1938);
   const h = idx ? lookup(idx, lat, lng) : null;
-  return { ie: true, bi, fs: h && h.e.name ? h.e.name === 'Ireland' : null };
+  return { ie: true, bi, now, fs: h && h.e.name ? h.e.name === 'Ireland' : null };
 }
 
 // ---------- State ----------------------------------------------------------
@@ -418,6 +435,8 @@ const state = {
   picking: false,
   history: [],
   famousSel: -1,
+  openEvents: new Set(),
+  filters: { hist: true, maps: true, events: true, ...(store.get('tm.filters') || {}) },
 };
 
 const inBox = (b, lat, lng) => lat >= b[0][0] && lat <= b[1][0] && lng >= b[0][1] && lng <= b[1][1];
@@ -454,6 +473,25 @@ function probeOk(r, lat, lng) {
     })
     .catch(() => probeCache.set(k, false));
   return false;
+}
+
+function kmBetween(lat1, lng1, lat2, lng2) {
+  const r = Math.PI / 180;
+  const a = Math.sin(((lat2 - lat1) * r) / 2) ** 2 + Math.cos(lat1 * r) * Math.cos(lat2 * r) * Math.sin(((lng2 - lng1) * r) / 2) ** 2;
+  return 12742 * Math.asin(Math.sqrt(a));
+}
+
+// Events that concern a place (needs the 2010 and 1938 border data for country / Free State).
+function eventsFor(lat, lng) {
+  const c = placeCtx(lat, lng);
+  return EVENTS.filter((e) => {
+    if (e.scope === 'lt') return c.now === 'Lithuania';
+    if (e.scope === 'ie') return c.ie;
+    if (e.scope === 'ni') return c.ie && c.fs === false;
+    if (e.scope === 'roi') return c.ie && c.fs === true;
+    if (e.scope === 'near') return !!e.near && kmBetween(lat, lng, e.near[0], e.near[1]) <= e.near[2];
+    return false;
+  }).sort((a, b) => a.from - b.from || a.to - b.to);
 }
 
 // Rebuild the timeline for the same place (a map became available), keeping the selected stop.
@@ -1005,6 +1043,12 @@ function refreshHere() {
       if (histLayer._here !== here) { histLayer._here = here; histLayer.setStyle((f) => styleFor(f, here)); }
     }
   }
+  const y = s.kind === 'map' ? s.map.year : s.year;
+  const ev = idxCache.has(2010) ? eventsFor(state.loc.lat, state.loc.lng).filter((e) => e.from <= y && e.to >= y) : [];
+  if (ev.length) {
+    const shown = ev.slice(-3).map((e) => `<b>${esc(e.t)}</b> <span class="orig">(${esc(e.when)})</span>`).join(' · ');
+    html += `<div class="here-ev">Tuo metu: ${shown}${ev.length > 3 ? ` <span class="orig">ir dar ${ev.length - 3}</span>` : ''}</div>`;
+  }
   $('#tl-here').innerHTML = html;
   meMarker.setTooltipContent(esc(tip));
 }
@@ -1051,15 +1095,28 @@ function renderHistory() {
   const list = $('#hist-list');
   const fo = document.activeElement && document.activeElement.closest && document.activeElement.closest('#hist-list li');
   const fKey = fo ? fo.dataset.key : null;
-  const rows = historyGroups().map((g) => ({ kind: 'hist', sort: g.from, g }));
+  const f = state.filters;
+  const rows = f.hist ? historyGroups().map((g) => ({ kind: 'hist', sort: g.from, g })) : [];
   const complete = state.history.length === HIST_YEARS.length;
   if (complete) {
-    regionalFor(state.loc.lat, state.loc.lng).forEach((m) => rows.push({ kind: 'map', sort: m.year + 0.5, m }));
+    if (f.maps) regionalFor(state.loc.lat, state.loc.lng).forEach((m) => rows.push({ kind: 'map', sort: m.year + 0.5, m }));
+    if (f.events) eventsFor(state.loc.lat, state.loc.lng).forEach((e) => rows.push({ kind: 'event', sort: e.from + 0.3, e }));
     rows.sort((a, b) => a.sort - b.sort);
     const sat = state.wayback;
-    if (sat.length) rows.push({ kind: 'sat', from: sat[0].year, to: sat[sat.length - 1].year });
+    if (f.maps && sat.length) rows.push({ kind: 'sat', from: sat[0].year, to: sat[sat.length - 1].year });
   }
+  const evCount = complete ? eventsFor(state.loc.lat, state.loc.lng).length : 0;
+  $('#flt-events-n').textContent = evCount ? ` (${evCount})` : '';
   list.innerHTML = rows.map((r) => {
+    if (r.kind === 'event') {
+      const e = r.e;
+      const open = state.openEvents.has(e.i);
+      const wiki = e.w ? ` <a href="https://en.wikipedia.org/wiki/${encodeURIComponent(e.w.replace(/ /g, '_'))}" hreflang="en" target="_blank" rel="noopener">Vikipedija (anglų k.) ↗</a>` : '';
+      return `<li role="button" tabindex="0" class="event kind-${esc(e.kind)}${open ? ' open' : ''}" data-key="ev|${e.i}" aria-expanded="${open}">
+        <span class="dot ev"></span>
+        <span><div class="when">${esc(e.when)}</div><div class="what">${esc(e.t)}</div><div class="orig">${esc(EVENT_KIND[e.kind] || 'Įvykis')}</div>
+        <div class="ev-d"${open ? '' : ' hidden'}>${esc(e.d)}${wiki}</div></span></li>`;
+    }
     if (r.kind === 'map') {
       return `<li role="button" tabindex="0" class="map" data-key="map|${esc(r.m.id)}">
         <span class="dot" style="background:var(--then)"></span>
@@ -1079,8 +1136,19 @@ function renderHistory() {
       <span><div class="when">${esc(fmtSpan(g.from, g.to))}</div><div class="what">${what}</div>${sub ? `<div class="orig">${sub}</div>` : ''}</span></li>`;
   }).join('');
   list.querySelectorAll('li').forEach((li) => {
-    const go = () => {
+    const go = (ev) => {
       const [kind, id] = li.dataset.key.split('|');
+      if (kind === 'ev') {
+        if (ev && ev.target.closest('a')) return; // the Wikipedia link opens by itself
+        const e = EVENTS[+id];
+        const open = !state.openEvents.has(e.i);
+        if (open) state.openEvents.add(e.i); else state.openEvents.delete(e.i);
+        li.classList.toggle('open', open);
+        li.setAttribute('aria-expanded', String(open));
+        li.querySelector('.ev-d').hidden = !open;
+        if (open) setStop(nearestStop(e.from, (s) => s.kind === 'hist'));
+        return;
+      }
       let i = -1;
       if (kind === 'sat') i = state.stops.findIndex((s) => s.kind === 'sat');
       else if (kind === 'map') i = state.stops.findIndex((s) => s.kind === 'map' && s.map.id === id);
@@ -1091,7 +1159,7 @@ function renderHistory() {
       if (mobile()) setPanel(false);
     };
     li.addEventListener('click', go);
-    li.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+    li.addEventListener('keydown', (e) => { if (e.target === li && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); go(); } });
   });
   if (fKey) { const t = list.querySelector(`li[data-key="${CSS.escape(fKey)}"]`); if (t) t.focus({ preventScroll: true }); }
   markHistoryCurrent();
@@ -1103,7 +1171,8 @@ function markHistoryCurrent() {
   $$('#hist-list li').forEach((li) => {
     const [kind, id] = li.dataset.key.split('|');
     let on = false;
-    if (kind === 'sat') on = s.kind === 'sat';
+    if (kind === 'ev') { const e = EVENTS[+id]; const y = s.kind === 'map' ? s.map.year : s.year; on = !!e && e.from <= y && e.to >= y && s.kind !== 'sat'; }
+    else if (kind === 'sat') on = s.kind === 'sat';
     else if (kind === 'map') on = s.kind === 'map' && s.map.id === id;
     else on = s.kind === 'hist' && s.year >= +li.dataset.year && s.year <= +li.dataset.to;
     li.classList.toggle('cur', on);
@@ -1361,6 +1430,12 @@ $('#base-select').addEventListener('change', (e) => {
 });
 
 // ---------- Boot -----------------------------------------------------------
+
+['hist', 'maps', 'events'].forEach((k) => {
+  const box = $(`#flt-${k}`);
+  box.checked = state.filters[k];
+  box.addEventListener('change', () => { state.filters[k] = box.checked; store.set('tm.filters', state.filters); renderHistory(); });
+});
 
 (async function boot() {
   renderLoc();
