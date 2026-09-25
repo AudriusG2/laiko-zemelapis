@@ -2,66 +2,79 @@
 {
 "year": 2014,
 "id": 3026,
-"date": "2014-07-02"
+"date": "2014-07-02",
+"credit": "Esri, DigitalGlobe, Earthstar Geographics, CNES/Airbus DS, USDA FSA, USGS, Aerogrid, IGN, IGP, and the GIS User Community"
 },
 {
 "year": 2015,
 "id": 24007,
-"date": "2015-07-08"
+"date": "2015-07-08",
+"credit": "Esri, DigitalGlobe, Earthstar Geographics, CNES/Airbus DS, USDA FSA, USGS, Aerogrid, IGN, IGP, and the GIS User Community"
 },
 {
 "year": 2016,
 "id": 5097,
-"date": "2016-07-20"
+"date": "2016-07-20",
+"credit": "Esri, DigitalGlobe, Earthstar Geographics, CNES/Airbus DS, USDA FSA, USGS, Aerogrid, IGN, IGP, and the GIS User Community"
 },
 {
 "year": 2017,
 "id": 3319,
-"date": "2017-07-14"
+"date": "2017-07-14",
+"credit": "Esri, DigitalGlobe, Earthstar Geographics, CNES/Airbus DS, USDA FSA, USGS, Aerogrid, IGN, IGP, and the GIS User Community"
 },
 {
 "year": 2018,
 "id": 14829,
-"date": "2018-07-25"
+"date": "2018-07-25",
+"credit": "Esri, Vantor, Earthstar Geographics, CNES/Airbus DS, USDA FSA, USGS, Aerogrid, IGN, IGP, and the GIS User Community"
 },
 {
 "year": 2019,
 "id": 16681,
-"date": "2019-07-17"
+"date": "2019-07-17",
+"credit": "Esri, Vantor, Earthstar Geographics, CNES/Airbus DS, USDA FSA, USGS, Aerogrid, IGN, IGP, and the GIS User Community"
 },
 {
 "year": 2020,
 "id": 9549,
-"date": "2020-07-22"
+"date": "2020-07-22",
+"credit": "Esri, Vantor, Earthstar Geographics, CNES/Airbus DS, USDA FSA, USGS, Aerogrid, IGN, IGP, and the GIS User Community"
 },
 {
 "year": 2021,
 "id": 8432,
-"date": "2021-07-21"
+"date": "2021-07-21",
+"credit": "Esri, Vantor, Earthstar Geographics, CNES/Airbus DS, USDA FSA, USGS, Aerogrid, IGN, IGP, and the GIS User Community"
 },
 {
 "year": 2022,
 "id": 13851,
-"date": "2022-07-21"
+"date": "2022-07-21",
+"credit": "Esri, Vantor, Earthstar Geographics, and the GIS User Community"
 },
 {
 "year": 2023,
 "id": 64776,
-"date": "2023-08-31"
+"date": "2023-08-31",
+"credit": "Esri, Vantor, Earthstar Geographics, and the GIS User Community"
 },
 {
 "year": 2024,
 "id": 32553,
-"date": "2024-08-15"
+"date": "2024-08-15",
+"credit": "Esri, Vantor, Earthstar Geographics, and the GIS User Community"
 },
 {
 "year": 2025,
 "id": 49999,
-"date": "2025-07-31"
+"date": "2025-07-31",
+"credit": "Esri, Vantor, Earthstar Geographics, and the GIS User Community"
 },
 {
 "year": 2026,
 "id": 26334,
-"date": "2026-08-05"
+"date": "2026-08-05",
+"credit": "Esri, Vantor, Earthstar Geographics, and the GIS User Community"
 }
 ]

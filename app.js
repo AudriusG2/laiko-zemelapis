@@ -77,7 +77,7 @@ const LT = {
   'Tunisia': 'Tunisas', 'Ethiopia': 'Etiopija',
   'Iceland': 'Islandija', 'Kingdom of France': 'Prancūzijos karalystė', 'Carolingian Empire': 'Karolingų imperija',
   'West Francia': 'Vakarų Frankų karalystė', 'Neustria': 'Neustrija', 'Habsburg Netherlands': 'Habsburgų Nyderlandai',
-  'Hallstatt culture': 'Halštato kultūra', 'Britany': 'Bretanė', 'Urnfield cultures': (y, c) => (c && c.bi ? 'Bronzos amžiaus kultūros' : 'Urnų laukų kultūros'),
+  'Hallstatt culture': 'Halštato kultūra', 'La Tène culture': 'La Teno kultūra', 'Britany': 'Bretanė', 'Urnfield cultures': (y, c) => (c && c.bi ? 'Bronzos amžiaus kultūros' : 'Urnų laukų kultūros'),
   'Beaker': 'Varpinių taurių kultūra', 'Neanderthal': 'Neandertaliečiai',
   // The data's Urnfield polygon also covers the British Isles, which had their own Bronze Age cultures.
   // Britain and Ireland. The data draws Ireland as one polygon, often inside a British one, so some
@@ -94,7 +94,7 @@ const LT = {
   },
   'Kingdom of Ireland': 'Airijos karalystė',
   'United Kingdom of Great Britain and Ireland': (y, c) => {
-    if (y < 1922) return 'Didžiosios Britanijos ir Airijos Jungtinė Karalystė';
+    if (y < 1922) return 'Jungtinė Didžiosios Britanijos ir Airijos Karalystė';
     if (c && c.ie && c.fs === true) return 'Airijos laisvoji valstybė';
     if (c && c.ie && c.fs === false) return 'Jungtinė Karalystė (Šiaurės Airija)';
     return 'Jungtinė Karalystė';
@@ -383,7 +383,7 @@ function ensureIndex() {
       refreshHistory();
     }
   };
-  Promise.all(Array.from({ length: 4 }, worker)).finally(() => { indexing = false; refreshHistory(); });
+  Promise.all(Array.from({ length: 4 }, worker)).finally(() => { indexing = false; refreshHistory(); refreshStops(); });
 }
 
 function hereAt(year) {
@@ -422,14 +422,53 @@ const state = {
 
 const inBox = (b, lat, lng) => lat >= b[0][0] && lat <= b[1][0] && lng >= b[0][1] && lng <= b[1][1];
 function regionalFor(lat, lng) {
-  return REGIONAL.filter((r) => (r.counties ? Object.values(r.counties).some((b) => inBox(b, lat, lng)) : inBox(r.cover || r.bounds, lat, lng)));
+  return REGIONAL.filter((r) => (r.counties ? Object.values(r.counties) : r.covers || [r.cover || r.bounds]).some((b) => inBox(b, lat, lng))
+    && (!r.country || inCountry(r.country, lat, lng)) && (!r.probe || probeOk(r, lat, lng)));
+}
+
+// Present-day country at a point, from the 2010 border data (true until that file is loaded).
+function inCountry(name, lat, lng) {
+  const idx = idxCache.get(2010);
+  if (!idx) return true;
+  const h = lookup(idx, lat, lng);
+  return !!(h && h.e.name === name);
+}
+
+// Patchy services (e.g. the 1944 aerial photos): ask the server for a 4x4 image at the place.
+// The first call answers "no"; when the server says yes, the timeline is rebuilt.
+const probeCache = new Map();
+function probeOk(r, lat, lng) {
+  const k = `${r.id}|${lat.toFixed(3)},${lng.toFixed(3)}`;
+  if (probeCache.has(k)) return probeCache.get(k) === true;
+  probeCache.set(k, null);
+  const p = L.CRS.EPSG3857.project(L.latLng(lat, lng)), d = 20;
+  fetch(`${r.url}/export?bbox=${p.x - d},${p.y - d},${p.x + d},${p.y + d}&bboxSR=3857&imageSR=3857&size=4,4&format=png&transparent=true&f=image`)
+    .then((res) => res.blob()).then(createImageBitmap).then((bmp) => {
+      const c = document.createElement('canvas');
+      c.width = c.height = 4;
+      const g = c.getContext('2d');
+      g.drawImage(bmp, 0, 0);
+      const ok = g.getImageData(2, 2, 1, 1).data[3] > 0;
+      probeCache.set(k, ok);
+      if (ok && state.loc.lat.toFixed(3) === lat.toFixed(3) && state.loc.lng.toFixed(3) === lng.toFixed(3)) refreshStops();
+    })
+    .catch(() => probeCache.set(k, false));
+  return false;
+}
+
+// Rebuild the timeline for the same place (a map became available), keeping the selected stop.
+function refreshStops() {
+  const i = rebuildStops();
+  state.idx = i;
+  range.value = i;
+  renderHistory();
 }
 
 function buildStops() {
   const hist = HIST_YEARS.map((y) => ({ year: y, kind: 'hist' }));
   const maps = regionalFor(state.loc.lat, state.loc.lng).map((r) => ({ year: r.year, kind: 'map', map: r }));
   const past = [...hist, ...maps].sort((a, b) => a.year - b.year || (a.kind === 'hist' ? -1 : 1));
-  const sat = state.wayback.map((w) => ({ year: w.year, kind: 'sat', id: w.id, date: w.date }));
+  const sat = state.wayback.map((w) => ({ year: w.year, kind: 'sat', id: w.id, date: w.date, credit: w.credit }));
   return [...past, ...sat];
 }
 const stopKey = (s) => (s ? `${s.kind}|${s.year}|${s.map ? s.map.id : s.id || ''}` : '');
@@ -457,6 +496,8 @@ const map = L.map('map', { zoomControl: false, worldCopyJump: true, minZoom: 2, 
   .setView([state.loc.lat, state.loc.lng], 6);
 L.control.zoom({ position: 'bottomright' }).addTo(map);
 L.control.scale({ position: 'bottomleft', imperial: false }).addTo(map);
+// Esri relief or imagery is on screen in almost every view, so its required credit sits in the prefix once.
+map.attributionControl.setPrefix('<a href="https://leafletjs.com">Leaflet</a> | Powered by <a href="https://www.esri.com/">Esri</a>');
 // Place names in the search and the location card come from OpenStreetMap, whatever base map is shown.
 map.attributionControl.addAttribution('Vietovardžiai: <a href="https://nominatim.openstreetmap.org/">Nominatim</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>');
 
@@ -473,7 +514,7 @@ const NOW_LAYERS = {
     maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   }),
   sat: L.tileLayer(`${ESRI}/World_Imagery/MapServer/tile/{z}/{y}/{x}`, {
-    maxNativeZoom: 18, maxZoom: 19, attribution: 'Powered by <a href="https://www.esri.com/">Esri</a> | Palydovas: Esri, Vantor, Earthstar Geographics, GIS User Community',
+    maxNativeZoom: 18, maxZoom: 19, attribution: 'Palydovas: Esri, Vantor, Earthstar Geographics, and the GIS User Community',
   }),
   topo: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
     maxNativeZoom: 17, maxZoom: 19, attribution: 'Duomenys: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, SRTM | Stilius: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
@@ -485,7 +526,7 @@ NOW_LAYERS[nowKey].addTo(map);
 $('#base-select').value = nowKey;
 
 const reliefLayer = L.tileLayer(`${ESRI}/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}`, {
-  pane: 'thenTiles', maxNativeZoom: 13, maxZoom: 19, attribution: 'Powered by <a href="https://www.esri.com/">Esri</a> | Reljefas: &copy; 2014 Esri',
+  pane: 'thenTiles', maxNativeZoom: 13, maxZoom: 19, attribution: 'Reljefas: &copy; 2014 Esri',
 });
 
 // Wayback releases lack z18–19 tiles in many places: fall back to z17 and upscale.
@@ -529,6 +570,10 @@ function regionalLayer(r) {
     // Each county sheet has opaque paper outside the county; 'darken' lets the neighbour show through it.
     r._layer = L.layerGroup(Object.entries(r.counties).map(([county, b], i) =>
       L.tileLayer(r.url, { ...common, pane: 'thenCounties', className: 'county-sheet', ...(i === 0 ? { attribution: r.attribution } : {}), county, bounds: L.latLngBounds(b) })));
+  } else if (r.kind === 'stack') {
+    // Several sub-layers of one atlas, the most detailed last so it is drawn on top.
+    r._layer = L.layerGroup(r.subs.map(([sub, maxNative], i) =>
+      L.tileLayer(r.url, { ...common, sub, maxNativeZoom: maxNative, bounds: L.latLngBounds(r.bounds), ...(i === 0 ? { attribution: r.attribution } : {}) })));
   } else if (r.kind === 'arcgis-export') {
     r._layer = new ArcExportLayer(r.url, { ...common, bounds: L.latLngBounds(r.bounds), attribution: r.attribution, format: r.format });
   } else {
@@ -824,7 +869,7 @@ async function setStop(i) {
     if (!waybackLayers[s.id]) {
       waybackLayers[s.id] = new WaybackLayer(
         `https://wayback.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/WMTS/1.0.0/default028mm/MapServer/tile/${s.id}/{z}/{y}/{x}`,
-        { pane: 'thenTiles', maxZoom: 19, attribution: `Powered by <a href="https://www.esri.com/">Esri</a> | World Imagery Wayback ${s.date}: Esri, Vantor, Earthstar Geographics, GIS User Community` },
+        { pane: 'thenTiles', maxZoom: 19, attribution: `World Imagery Wayback ${s.date}: ${s.credit || 'Esri, Vantor, Earthstar Geographics, and the GIS User Community'}` },
       );
     }
     map.getPane('thenTiles').style.filter = 'none';
