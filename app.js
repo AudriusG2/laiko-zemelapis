@@ -75,9 +75,31 @@ const LT = {
   'Canada': 'Kanada', 'Mexico': 'Meksika', 'Brazil': 'Brazilija', 'Argentina': 'Argentina', 'Chile': 'Čilė', 'Peru': 'Peru',
   'Australia': 'Australija', 'New Zealand': 'Naujoji Zelandija', 'Morocco': 'Marokas', 'Algeria': 'Alžyras',
   'Tunisia': 'Tunisas', 'Ethiopia': 'Etiopija',
-  // Britain and Ireland (extended from the data in IRELAND_NAMES below)
-  'England': 'Anglija', 'Scotland': 'Škotija', 'Wales': 'Velsas', 'United Kingdom': 'Jungtinė Karalystė',
-  'Ireland': 'Airija', 'Iceland': 'Islandija',
+  'Iceland': 'Islandija', 'Kingdom of France': 'Prancūzijos karalystė', 'Carolingian Empire': 'Karolingų imperija',
+  'West Francia': 'Vakarų Frankų karalystė', 'Neustria': 'Neustrija', 'Habsburg Netherlands': 'Habsburgų Nyderlandai',
+  'Hallstatt culture': 'Halštato kultūra', 'Britany': 'Bretanė', 'Urnfield cultures': 'Urnų laukų kultūros',
+  'Beaker': 'Varpinių taurių kultūra', 'Neanderthal': 'Neandertaliečiai',
+  // Britain and Ireland. The data draws Ireland as one polygon, often inside a British one, so some
+  // labels depend on where on the island you are (c.ie = in Ireland, c.fs = in the later Free State).
+  'Irlanda': 'Airija (gėlų karalystės)',
+  'Celts': (y, c) => (c && c.ie ? 'Keltai (gėlai)' : 'Keltai'),
+  'Celtic kingdoms': (y, c) => (c && c.ie ? 'Airijos gėlų karalystės' : 'Keltų karalystės'),
+  'English territory': (y, c) => (c && c.ie ? 'Airijos lordystė (Anglijos karaliaus valdos)' : 'Anglijos karaliaus valdos'),
+  'England': (y, c) => (c && c.ie ? 'Airijos lordystė (Anglijos karūna)' : 'Anglijos karalystė'),
+  'England and Ireland': (y, c) => (c && c.ie ? (y < 1542 ? 'Airijos lordystė' : 'Airijos karalystė (Anglijos karūna)') : 'Anglijos karalystė'),
+  'Kingdom of Ireland': 'Airijos karalystė',
+  'United Kingdom of Great Britain and Ireland': (y, c) => {
+    if (y < 1922) return 'Didžiosios Britanijos ir Airijos Jungtinė Karalystė';
+    if (c && c.ie && c.fs === true) return 'Airijos laisvoji valstybė';
+    if (c && c.ie && c.fs === false) return 'Jungtinė Karalystė (Šiaurės Airija)';
+    return 'Jungtinė Karalystė';
+  },
+  'United Kingdom': (y, c) => (y < 1801 ? 'Didžiosios Britanijos karalystė' : c && c.ie ? 'Jungtinė Karalystė (Šiaurės Airija)' : 'Jungtinė Karalystė'),
+  'Ireland': (y) => (y < 1949 ? 'Airija (Éire)' : 'Airijos Respublika'),
+  'Scotland': 'Škotijos karalystė', 'Angevin Empire': 'Anžu imperija', 'Wessex': 'Veseksas', 'Mercia': 'Mersija',
+  'Northumbria': 'Nortumbrija', 'Kent': 'Kentas', 'Essex': 'Eseksas', 'Cantia': 'Kentas', 'Welsh': 'Velsiečių karalystės',
+  'Picts': 'Piktai', 'Scots': 'Škotai (Dal Riata)', 'Anglo-Saxons': 'Anglosaksai', 'Dumnonia': 'Dumnonija',
+  'Dumonii': 'Dumnonai', 'Rome (Constantinus)': 'Romos imperija (Konstantino valdos)',
 };
 
 // Corrupted names in the source data.
@@ -147,10 +169,13 @@ const FAMOUS = [
   { y: 2005, when: '2005 m.', t: 'Google Maps ir Google Earth', ll: [37.422, -122.084], d: 'Interaktyvūs žemėlapiai ir palydovų nuotraukos tapo prieinami kiekvienam naršyklėje, o vėliau ir telefone.', w: 'Google Maps', noThumb: true },
 ];
 
-// Georeferenced historical maps of particular regions. Each appears as an extra
-// point on the timeline only when your location is inside its bounds.
-// kind: 'xyz' (L.tileLayer), 'wms' (L.tileLayer.wms) or 'arcgis-export' (ArcGIS MapServer/ImageServer export).
-const REGIONAL = [];
+FAMOUS.push(...(window.EXTRA_FAMOUS || []));
+FAMOUS.sort((a, b) => a.y - b.y);
+
+// Georeferenced historical maps of particular regions (regional.js). Maps whose providers allow only
+// personal or local use appear only when the app runs on this computer.
+const IS_LOCAL = location.protocol === 'file:' || ['localhost', '127.0.0.1', '[::1]', ''].includes(location.hostname);
+const REGIONAL = (window.REGIONAL_MAPS || []).filter((r) => IS_LOCAL || r.license === 'open');
 
 // ---------- Helpers --------------------------------------------------------
 
@@ -197,11 +222,11 @@ function cleanName(s) {
   if (!t || /^\?+$/.test(t)) return null; // a '?' placeholder polygon at -200 means no data
   return NAME_FIX[t] || t;
 }
-function ltName(raw, year) {
+function ltName(raw, year, ctx) {
   const orig = cleanName(raw);
   if (!orig) return null;
   const tr = LT[orig] ?? LT[orig.replace(/-/g, ' ')] ?? LT[orig.replace(/ /g, '-')];
-  const lt = typeof tr === 'function' ? tr(year) : tr;
+  const lt = typeof tr === 'function' ? tr(year, ctx) : tr;
   return { lt: lt || orig, orig: lt && lt !== orig ? orig : null };
 }
 
@@ -361,7 +386,16 @@ function hereAt(year) {
   const idx = idxCache.get(year);
   if (!idx) return { failed: true };
   const hit = lookup(idx, state.loc.lat, state.loc.lng);
-  return hit ? { name: ltName(hit.e.name, year), fi: hit.e.fi, approx: hit.approx } : { name: null };
+  return hit ? { name: ltName(hit.e.name, year, placeCtx(state.loc.lat, state.loc.lng)), fi: hit.e.fi, approx: hit.approx } : { name: null };
+}
+
+// Where on the island of Ireland a point is: the 1938 data separates Éire from Northern Ireland.
+function placeCtx(lat, lng) {
+  const ie = lat > 51.38 && lat < 55.46 && lng > -10.76 && lng < -5.39;
+  if (!ie) return { ie: false };
+  const idx = idxCache.get(1938);
+  const h = idx ? lookupStrict(idx, lat, lng) : null;
+  return { ie: true, fs: h && h.e.name ? h.e.name === 'Ireland' : null };
 }
 
 // ---------- State ----------------------------------------------------------
@@ -378,8 +412,9 @@ const state = {
   famousSel: -1,
 };
 
+const inBox = (b, lat, lng) => lat >= b[0][0] && lat <= b[1][0] && lng >= b[0][1] && lng <= b[1][1];
 function regionalFor(lat, lng) {
-  return REGIONAL.filter((r) => lat >= r.bounds[0][0] && lat <= r.bounds[1][0] && lng >= r.bounds[0][1] && lng <= r.bounds[1][1]);
+  return REGIONAL.filter((r) => (r.counties ? Object.values(r.counties).some((b) => inBox(b, lat, lng)) : inBox(r.cover || r.bounds, lat, lng)));
 }
 
 function buildStops() {
@@ -475,18 +510,18 @@ const ArcExportLayer = L.TileLayer.extend({
   },
 });
 
+const BLANK_TILE = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 function regionalLayer(r) {
   if (r._layer) return r._layer;
-  const common = {
-    pane: 'thenTiles', bounds: L.latLngBounds(r.bounds), minZoom: 0, maxZoom: 19,
-    minNativeZoom: r.minZoom, maxNativeZoom: r.maxZoom, attribution: r.attribution,
-  };
-  if (r.kind === 'wms') {
-    r._layer = L.tileLayer.wms(r.url, { ...common, layers: r.layers, format: r.format || 'image/png', transparent: true, version: r.version || '1.3.0', ...(r.wmsParams || {}) });
+  // Hidden below the zoom the source serves; enlarged above its last real zoom.
+  const common = { pane: 'thenTiles', minZoom: r.minZoom, maxZoom: 20, maxNativeZoom: r.maxZoom, errorTileUrl: BLANK_TILE };
+  if (r.kind === 'counties') {
+    r._layer = L.layerGroup(Object.entries(r.counties).map(([county, b], i) =>
+      L.tileLayer(r.url, { ...common, ...(i === 0 ? { attribution: r.attribution } : {}), county, bounds: L.latLngBounds(b) })));
   } else if (r.kind === 'arcgis-export') {
-    r._layer = new ArcExportLayer(r.url, { ...common, format: r.format, params: r.params });
+    r._layer = new ArcExportLayer(r.url, { ...common, bounds: L.latLngBounds(r.bounds), attribution: r.attribution, format: r.format });
   } else {
-    r._layer = L.tileLayer(r.url, { ...common, subdomains: r.subdomains || 'abc' });
+    r._layer = L.tileLayer(r.url, { ...common, bounds: L.latLngBounds(r.bounds), attribution: r.attribution });
   }
   return r._layer;
 }
@@ -787,8 +822,9 @@ async function setStop(i) {
     removeHist();
     map.getPane('thenTiles').style.filter = 'none';
     setThenTiles([reliefLayer, regionalLayer(s.map)]);
-    const want = s.map.viewZoom || 14;
-    if (map.getZoom() < want - 2) map.flyTo([state.loc.lat, nearCopy(state.loc.lng)], want, { duration: 0.8 });
+    // Fly in to where the map is readable, unless you are already close enough.
+    const want = s.map.zoom || 14;
+    if (map.getZoom() < Math.max(want - 2, s.map.minZoom)) map.flyTo([state.loc.lat, nearCopy(state.loc.lng)], want, { duration: 0.8 });
   } else {
     map.getPane('thenTiles').style.filter = 'sepia(.35) saturate(.9)';
     setThenTiles([reliefLayer]);
@@ -953,7 +989,7 @@ function renderHistory() {
     if (r.kind === 'map') {
       return `<li role="button" tabindex="0" class="map" data-key="map|${esc(r.m.id)}">
         <span class="dot" style="background:var(--then)"></span>
-        <span><div class="when">${esc(r.m.when)}</div><div class="what">${esc(r.m.t)}</div><div class="orig">Senasis žemėlapis · rodomas gatvių tikslumu</div></span></li>`;
+        <span><div class="when">${esc(r.m.when)}</div><div class="what">${esc(r.m.t)}</div><div class="orig">Senasis žemėlapis · ${esc(r.m.region)}</div></span></li>`;
     }
     if (r.kind === 'sat') {
       return `<li role="button" tabindex="0" data-key="sat">
