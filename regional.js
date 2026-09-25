@@ -144,12 +144,12 @@ window.REGIONAL_MAPS = [
     attribution: '1944 m. Lietuvos ortofotografiniai žemėlapiai © SSVA, <a href="https://www.geoportal.lt/">geoportal.lt</a>' },
   { id: 'ort10lt-1995', year: 1997, when: '1995–1999', t: 'Pirmasis Lietuvos ortofotografinis žemėlapis (ORT10LT)', short: 'ORT10LT 1995–1999', region: 'Lietuva',
     kind: 'arcgis-export', url: 'https://www.geoportal.lt/arcgis/rest/services/NZT/ORT10LT_1995_2001/MapServer', format: 'jpg', bounds: [[53.88, 20.93], [56.46, 26.84]],
-    minZoom: 8, maxZoom: 17, zoom: 16, license: 'open',
-    attribution: 'ORT10LT 1995–1999 © Nacionalinė žemės tarnyba, © VšĮ SSVA (<a href="https://www.geoportal.lt/">geoportal.lt</a>), CC BY 4.0' },
+    minZoom: 8, maxZoom: 17, zoom: 16, license: 'local',
+    attribution: 'ORT10LT 1995–1999 © Nacionalinė žemės tarnyba, © VšĮ SSVA (<a href="https://www.geoportal.lt/">geoportal.lt</a>)' },
   { id: 'ort10lt-2005', year: 2005, when: '2005–2006', t: 'Lietuvos ortofotografinis žemėlapis (ORT10LT, spalvotas)', short: 'ORT10LT 2005–2006', region: 'Lietuva',
     kind: 'arcgis-export', url: 'https://www.geoportal.lt/arcgis/rest/services/NZT/ORT10LT_2005_2006/MapServer', format: 'jpg', bounds: [[53.88, 20.93], [56.46, 26.84]],
-    minZoom: 8, maxZoom: 18, zoom: 16, license: 'open',
-    attribution: 'ORT10LT 2005–2006 © Nacionalinė žemės tarnyba, © VšĮ SSVA (<a href="https://www.geoportal.lt/">geoportal.lt</a>), CC BY 4.0' },
+    minZoom: 8, maxZoom: 18, zoom: 16, license: 'local',
+    attribution: 'ORT10LT 2005–2006 © Nacionalinė žemės tarnyba, © VšĮ SSVA (<a href="https://www.geoportal.lt/">geoportal.lt</a>)' },
 ];
 
 // Famous maps of Ireland and Northern Ireland (fact-checked). Merged into the main list by year.

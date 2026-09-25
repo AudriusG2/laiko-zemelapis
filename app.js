@@ -457,6 +457,8 @@ const map = L.map('map', { zoomControl: false, worldCopyJump: true, minZoom: 2, 
   .setView([state.loc.lat, state.loc.lng], 6);
 L.control.zoom({ position: 'bottomright' }).addTo(map);
 L.control.scale({ position: 'bottomleft', imperial: false }).addTo(map);
+// Place names in the search and the location card come from OpenStreetMap, whatever base map is shown.
+map.attributionControl.addAttribution('Vietovardžiai: <a href="https://nominatim.openstreetmap.org/">Nominatim</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>');
 
 map.createPane('thenTiles').style.zIndex = 300;
 // County sheets get their own pane so their paper margins blend only with each other (see .county-sheet).
@@ -471,10 +473,10 @@ const NOW_LAYERS = {
     maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   }),
   sat: L.tileLayer(`${ESRI}/World_Imagery/MapServer/tile/{z}/{y}/{x}`, {
-    maxNativeZoom: 18, maxZoom: 19, attribution: 'Palydovas: Esri, Maxar, Earthstar Geographics',
+    maxNativeZoom: 18, maxZoom: 19, attribution: 'Powered by <a href="https://www.esri.com/">Esri</a> | Palydovas: Esri, Vantor, Earthstar Geographics, GIS User Community',
   }),
   topo: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-    maxNativeZoom: 17, maxZoom: 19, attribution: '&copy; OpenStreetMap, <a href="https://opentopomap.org">OpenTopoMap</a> (CC-BY-SA)',
+    maxNativeZoom: 17, maxZoom: 19, attribution: 'Duomenys: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, SRTM | Stilius: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
   }),
 };
 let nowKey = store.get('tm.base') || 'osm';
@@ -483,7 +485,7 @@ NOW_LAYERS[nowKey].addTo(map);
 $('#base-select').value = nowKey;
 
 const reliefLayer = L.tileLayer(`${ESRI}/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}`, {
-  pane: 'thenTiles', maxNativeZoom: 13, maxZoom: 19, attribution: 'Reljefas: Esri',
+  pane: 'thenTiles', maxNativeZoom: 13, maxZoom: 19, attribution: 'Powered by <a href="https://www.esri.com/">Esri</a> | Reljefas: &copy; 2014 Esri',
 });
 
 // Wayback releases lack z18–19 tiles in many places: fall back to z17 and upscale.
@@ -822,7 +824,7 @@ async function setStop(i) {
     if (!waybackLayers[s.id]) {
       waybackLayers[s.id] = new WaybackLayer(
         `https://wayback.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/WMTS/1.0.0/default028mm/MapServer/tile/${s.id}/{z}/{y}/{x}`,
-        { pane: 'thenTiles', maxZoom: 19, attribution: `Esri World Imagery Wayback (${s.date})` },
+        { pane: 'thenTiles', maxZoom: 19, attribution: `Powered by <a href="https://www.esri.com/">Esri</a> | World Imagery Wayback ${s.date}: Esri, Vantor, Earthstar Geographics, GIS User Community` },
       );
     }
     map.getPane('thenTiles').style.filter = 'none';
@@ -1061,7 +1063,9 @@ function markHistoryCurrent() {
 const famousLayer = L.layerGroup().addTo(map);
 const famousRenderer = L.svg({ pane: 'famousPane' });
 const wikiThumbs = {};
+const wikiThumbName = {};
 const wikiLt = {};
+const credits = {};
 
 function brass() { return getComputedStyle(document.documentElement).getPropertyValue('--then').trim() || '#8f6118'; }
 
@@ -1095,6 +1099,41 @@ function imgUrl(f) {
   if (f.noThumb) return null;
   return f.w ? wikiThumbs[f.w] : null;
 }
+function imgFile(f) {
+  if (f.img) return f.img;
+  if (f.noThumb || !f.w) return null;
+  return wikiThumbName[f.w] || null;
+}
+
+// Author and licence of a Commons image (many are CC BY-SA, which requires this credit).
+async function loadCredit(name) {
+  if (credits[name]) return credits[name];
+  const url = 'https://commons.wikimedia.org/w/api.php?' + new URLSearchParams({
+    action: 'query', titles: `File:${name}`, prop: 'imageinfo', iiprop: 'extmetadata',
+    iiextmetadatafilter: 'Artist|LicenseShortName|LicenseUrl', format: 'json', formatversion: '2', origin: '*',
+  });
+  try {
+    const q = (await (await fetch(url)).json()).query;
+    const m = (q.pages[0].imageinfo || [{}])[0].extmetadata || {};
+    const text = (html) => (html ? new DOMParser().parseFromString(html, 'text/html').body.textContent.replace(/\s+/g, ' ').trim() : '');
+    // Commons often repeats the author (visible text plus a hidden copy): keep one.
+    let artist = text(m.Artist && m.Artist.value);
+    const half = artist.length / 2;
+    if (Number.isInteger(half) && artist.slice(0, half) === artist.slice(half)) artist = artist.slice(0, half);
+    if (/^unknown( author)?$/i.test(artist)) artist = 'autorius nežinomas';
+    let lic = text(m.LicenseShortName && m.LicenseShortName.value);
+    if (/^public domain$/i.test(lic)) lic = 'viešoji nuosavybė';
+    credits[name] = { artist: artist.slice(0, 90), lic, url: m.LicenseUrl && m.LicenseUrl.value };
+  } catch { credits[name] = { artist: '', lic: '' }; }
+  return credits[name];
+}
+
+function creditHtml(name, c) {
+  const page = `<a href="https://commons.wikimedia.org/wiki/File:${encodeURIComponent(name.replace(/ /g, '_'))}" target="_blank" rel="noopener">Wikimedia Commons</a>`;
+  if (!c) return `Paveikslas: ${page}`;
+  const lic = c.lic ? (c.url ? `<a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.lic)}</a>` : esc(c.lic)) : '';
+  return ['Paveikslas', [c.artist ? esc(c.artist) : '', lic, page].filter(Boolean).join(' · ')].join(': ');
+}
 
 function wikiLink(f) {
   if (!f.w) return '';
@@ -1104,9 +1143,20 @@ function wikiLink(f) {
 
 function setCardImage(box, f) {
   const src = imgUrl(f);
-  if (!src) { box.innerHTML = '<div class="noimg">Šio žemėlapio paveikslo čia nėra. Daugiau rasi Vikipedijoje.</div>'; return; }
+  const credit = box.parentElement.querySelector('.credit');
+  if (!src) {
+    box.innerHTML = '<div class="noimg">Šio žemėlapio paveikslo čia nėra. Daugiau rasi Vikipedijoje.</div>';
+    if (credit) credit.hidden = true;
+    return;
+  }
   box.innerHTML = `<img src="${esc(src)}" alt="${esc(f.t)}" loading="lazy">`;
   box.firstChild.addEventListener('error', () => { box.innerHTML = '<div class="noimg">Paveikslo įkelti nepavyko.</div>'; });
+  const name = imgFile(f);
+  if (credit && name) {
+    credit.hidden = false;
+    credit.innerHTML = creditHtml(name, credits[name]);
+    loadCredit(name).then((c) => { if (FAMOUS[state.famousSel] === f) credit.innerHTML = creditHtml(name, c); });
+  }
 }
 
 function selectFamous(i, opts = {}) {
@@ -1118,6 +1168,7 @@ function selectFamous(i, opts = {}) {
   card.hidden = false;
   card.innerHTML = `
     <div class="img"></div>
+    <div class="credit" hidden></div>
     <div class="body">
       <div class="eyebrow">${esc(f.when)}</div>
       <h3>${esc(f.t)}</h3>
@@ -1154,7 +1205,7 @@ async function loadWikiThumbs() {
   for (let i = 0; i < titles.length; i += 50) chunks.push(titles.slice(i, i + 50));
   await Promise.all(chunks.map(async (chunk) => {
     const url = 'https://en.wikipedia.org/w/api.php?' + new URLSearchParams({
-      action: 'query', titles: chunk.join('|'), prop: 'pageimages|langlinks', piprop: 'thumbnail', pithumbsize: '800',
+      action: 'query', titles: chunk.join('|'), prop: 'pageimages|langlinks', piprop: 'thumbnail|name', pithumbsize: '800',
       lllang: 'lt', lllimit: 'max', redirects: '1', format: 'json', formatversion: '2', origin: '*',
     });
     try {
@@ -1162,7 +1213,7 @@ async function loadWikiThumbs() {
       if (!q) return;
       [...(q.normalized || []), ...(q.redirects || [])].forEach((r) => { alias[r.from] = r.to; });
       (q.pages || []).forEach((p) => {
-        if (p.thumbnail) byTitle[p.title] = p.thumbnail.source;
+        if (p.thumbnail) byTitle[p.title] = { src: p.thumbnail.source, name: p.pageimage };
         if (p.langlinks && p.langlinks[0]) ltByTitle[p.title] = p.langlinks[0].title;
       });
     } catch { /* offline or this batch failed */ }
@@ -1170,7 +1221,7 @@ async function loadWikiThumbs() {
   titles.forEach((t) => {
     let k = t;
     for (let n = 0; n < 3 && alias[k]; n++) k = alias[k];
-    if (byTitle[k]) wikiThumbs[t] = byTitle[k];
+    if (byTitle[k]) { wikiThumbs[t] = byTitle[k].src; wikiThumbName[t] = byTitle[k].name; }
     if (ltByTitle[k]) wikiLt[t] = ltByTitle[k];
   });
   // Update an open card in place, without re-selecting it.

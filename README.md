@@ -19,7 +19,7 @@ Kairėje skirtuko pusėje rodoma praeitis, dešinėje – dabartinis žemėlapis
 
 Kai kurių senųjų žemėlapių tiekėjai (Škotijos nacionalinė biblioteka, Karalienės universitetas Belfaste, Vrublevskių biblioteka, Trinity College Dublin) leidžia juos naudoti asmeniškai, bet viešai svetainei prašo leidimo. Todėl:
 
-- **Svetainėje** rodomi tik atvirai licencijuoti arba viešosios nuosavybės senieji žemėlapiai (7 sluoksniai).
+- **Svetainėje** rodomi tik atvirai licencijuoti arba viešosios nuosavybės senieji žemėlapiai (5 sluoksniai).
 - **Paleidus kompiuteryje** rodomi visi 37 senieji žemėlapiai. Kuris žemėlapis kuriai grupei priklauso, nurodyta `regional.js` lauke `license`.
 
 ## Paleidimas kompiuteryje
@@ -45,7 +45,7 @@ Tada atsidaryk http://localhost:8777. Vietos nustatymas veikia per `localhost` a
 | Senieji Airijos ir pasaulio žemėlapiai | [National Library of Scotland](https://maps.nls.uk/) | CC-BY, vieša svetainė – su leidimu |
 | Belfasto, Omos ir Derio planai | Queen's University Belfast | be atviros licencijos |
 | Lietuvos senieji žemėlapiai ir Vilniaus planai | [LMA Vrublevskių biblioteka](https://www.mab.lt/) | be atviros licencijos |
-| Lietuvos ortofotografiniai žemėlapiai | [geoportal.lt](https://www.geoportal.lt/) | ORT10LT – CC BY 4.0 |
+| Lietuvos ortofotografiniai žemėlapiai | [geoportal.lt](https://www.geoportal.lt/) | © NŽT, © SSVA; viešai svetainei – tik su leidimu |
 | „Down Survey“ | [Trinity College Dublin](https://www.downsurvey.ie/) | be atviros licencijos |
 | Belfastas 1685 ir 1791, Londonderio grafystė 1837, GSGS 3906, trivierstis 1872 | Wikimedia Commons, Wikimaps Warper, Map Warper | viešoji nuosavybė |
 | Garsių žemėlapių vaizdai | Vikipedija ir Wikimedia Commons | pagal kiekvieno failo licenciją |
