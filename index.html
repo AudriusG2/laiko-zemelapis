@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Laiko žemėlapis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:wght@500;700&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Alegreya+Sans+SC:wght@500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <main id="stage">
+    <div id="map" role="region" aria-label="Žemėlapis"></div>
+
+    <!-- Swipe divider for compare mode -->
+    <div id="divider">
+      <div class="divider-line"></div>
+      <div id="divider-knob" role="slider" tabindex="0" aria-label="Praeities ir dabarties riba. Tempk, kad palygintum" aria-orientation="horizontal" aria-valuemin="3" aria-valuemax="97" aria-valuenow="50" aria-valuetext="50 %">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <span class="side-tag side-then" id="tag-then">Tada</span>
+      <span class="side-tag side-now" id="tag-now">Dabar</span>
+    </div>
+
+    <!-- Location card -->
+    <section id="loc" class="float-card">
+      <div class="eyebrow">Tavo vieta</div>
+      <div id="loc-name" class="loc-name">Vilnius</div>
+      <div id="loc-coords" class="mono">54,6872° Š; 25,2797° R</div>
+      <div id="loc-note" class="loc-note" role="status" aria-live="polite">Pavyzdinė vieta. Paspausk „Rasti mane“ arba pasirink savo.</div>
+      <form id="search" class="search" autocomplete="off">
+        <input id="search-input" type="search" placeholder="Ieškoti vietos (pvz. Kaunas)" aria-label="Ieškoti vietos">
+        <button type="submit" class="btn">Ieškoti</button>
+      </form>
+      <ul id="search-results" class="search-results" hidden></ul>
+      <div class="loc-actions">
+        <button id="btn-locate" type="button" class="btn btn-primary">
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+          Rasti mane
+        </button>
+        <button id="btn-pick" type="button" class="btn" aria-pressed="false">Pasirinkti žemėlapyje</button>
+      </div>
+    </section>
+
+    <!-- View controls -->
+    <section id="controls" class="float-card controls">
+      <div class="seg" role="radiogroup" aria-label="Rodymas">
+        <button type="button" data-mode="then" role="radio">Tik tada</button>
+        <button type="button" data-mode="compare" role="radio" class="on">Palyginti</button>
+        <button type="button" data-mode="now" role="radio">Tik dabar</button>
+      </div>
+      <label class="base-pick">
+        <span class="eyebrow">Dabar</span>
+        <select id="base-select" aria-label="Dabartinis žemėlapis">
+          <option value="osm">Gatvių žemėlapis</option>
+          <option value="sat">Palydovo nuotrauka</option>
+          <option value="topo">Topografinis</option>
+        </select>
+      </label>
+      <label class="check"><input type="checkbox" id="chk-famous" checked> Garsūs žemėlapiai</label>
+    </section>
+
+    <button id="btn-panel" type="button" class="btn panel-toggle" aria-controls="panel" aria-expanded="false">Istorija</button>
+  </main>
+
+  <aside id="panel">
+    <div class="tabs">
+      <div class="tablist" role="tablist" aria-label="Skydelis">
+        <button type="button" role="tab" id="tab-history" aria-controls="body-history" aria-selected="true" data-tab="history" class="on">Kas čia buvo</button>
+        <button type="button" role="tab" id="tab-famous" aria-controls="body-famous" aria-selected="false" tabindex="-1" data-tab="famous">Garsūs žemėlapiai</button>
+      </div>
+      <button type="button" class="panel-close" id="btn-panel-close" aria-label="Uždaryti">×</button>
+    </div>
+
+    <div class="tab-body" id="body-history" role="tabpanel" aria-labelledby="tab-history" data-body="history">
+      <p class="lede">Kokiai valstybei ar kultūrai tavo vieta priklausė per visą istoriją ir kokie seni žemėlapiai ją rodo. Paspausk eilutę ir žemėlapis persikels į tą laiką.</p>
+      <div id="hist-progress" class="progress"><div></div></div>
+      <ol id="hist-list" class="hist-list"></ol>
+      <p class="source">Sienos: <a href="https://github.com/aourednik/historical-basemaps" target="_blank" rel="noopener">historical-basemaps</a> (A. Ourednik, GPL-3.0). Senųjų laikų ribos apytikslės. „Artimiausia sritis“ reiškia, kad supaprastintos pakrantės nepasiekė tavo taško ir parodyta artimiausia valstybė iki 25 km.</p>
+    </div>
+
+    <div class="tab-body" id="body-famous" role="tabpanel" aria-labelledby="tab-famous" data-body="famous" hidden>
+      <div id="famous-card" class="famous-card" hidden></div>
+      <ol id="famous-list" class="famous-list"></ol>
+    </div>
+  </aside>
+
+  <footer id="timeline">
+    <div class="tl-head">
+      <button id="tl-prev" type="button" class="btn icon" aria-label="Ankstesnis laikotarpis">‹</button>
+      <div class="tl-year">
+        <div id="tl-era" class="eyebrow">Viduramžiai</div>
+        <div id="tl-year" class="year">1300 m.</div>
+      </div>
+      <button id="tl-next" type="button" class="btn icon" aria-label="Kitas laikotarpis">›</button>
+      <div class="tl-here">
+        <div class="eyebrow">Tavo vietoje tuo metu</div>
+        <div id="tl-here" class="here">…</div>
+      </div>
+    </div>
+    <div class="tl-track">
+      <input id="tl-range" type="range" min="0" max="10" step="1" value="0" aria-label="Laikotarpis">
+      <div id="tl-ticks" class="tl-ticks" aria-hidden="true"></div>
+    </div>
+  </footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
