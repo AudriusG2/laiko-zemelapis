@@ -509,12 +509,19 @@ map.createPane('famousPane').style.zIndex = 620;
 map.createPane('mePane').style.zIndex = 660;
 
 const ESRI = 'https://server.arcgisonline.com/ArcGIS/rest/services';
+// Esri basemaps through the owner's ArcGIS Location Platform API key. The key has only the Basemaps
+// privilege, works only from https://audriusg2.github.io and http://localhost:8777, and expires on
+// 2027-09-24 (renew it in the ArcGIS item "Laiko zemelapis"). Elsewhere the keyless endpoints are used.
+const ESRI_KEY = 'AAPTaOrUz2Z_bzBjUQ3LaFk0VgA..8xbv2D65etBmihm5oSDCFN1GRl0eK1hiLbRa9WjOBYaagfQBxDt3Q5W7v0g0muOQcM4Rjbm3ui6AZp2WUm80fhN3yqjUSZS41qV18mAfdeAFNUCLF0x07vKkJOKGJIiraOi4Jz-ghAQMwDRYVQeBFWczQgPLL237tqc_WXB0DSxU-YJU-W8kD5X_I3w-8krbzoVgyhNjY4YfPEuD3Kxxchd1wiqe24ZmL7uxucglaNtBwcgNKsonkthwAT1_aF47qky3';
+const ESRI_KEYED = location.hostname === 'audriusg2.github.io' || (location.hostname === 'localhost' && location.port === '8777');
+const ESRI_API = 'https://ibasemaps-api.arcgis.com/arcgis/rest/services';
+const esriTiles = (keyed, legacy) => (ESRI_KEYED ? `${ESRI_API}/${keyed}/MapServer/tile/{z}/{y}/{x}?token=${ESRI_KEY}` : `${ESRI}/${legacy}/MapServer/tile/{z}/{y}/{x}`);
 const NOW_LAYERS = {
   osm: L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   }),
-  sat: L.tileLayer(`${ESRI}/World_Imagery/MapServer/tile/{z}/{y}/{x}`, {
-    maxNativeZoom: 18, maxZoom: 19, attribution: 'Palydovas: Esri, Vantor, Earthstar Geographics, and the GIS User Community',
+  sat: L.tileLayer(esriTiles('World_Imagery', 'World_Imagery'), {
+    maxNativeZoom: 18, maxZoom: 19, attribution: 'Palydovas: Esri, Vantor, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community',
   }),
   topo: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
     maxNativeZoom: 17, maxZoom: 19, attribution: 'Duomenys: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, SRTM | Stilius: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
@@ -525,8 +532,9 @@ if (!NOW_LAYERS[nowKey]) nowKey = 'osm';
 NOW_LAYERS[nowKey].addTo(map);
 $('#base-select').value = nowKey;
 
-const reliefLayer = L.tileLayer(`${ESRI}/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}`, {
-  pane: 'thenTiles', maxNativeZoom: 13, maxZoom: 19, attribution: 'Reljefas: &copy; 2014 Esri',
+const reliefLayer = L.tileLayer(esriTiles('Elevation/World_Hillshade', 'World_Shaded_Relief'), {
+  pane: 'thenTiles', maxNativeZoom: ESRI_KEYED ? 16 : 13, maxZoom: 19,
+  attribution: ESRI_KEYED ? 'Reljefas: Esri, Airbus DS, USGS, NGA, NASA, CGIAR, N Robinson, NCEAS, NLS, OS, NMA, Geodatastyrelsen, Rijkswaterstaat, GSA, Geoland, FEMA, Intermap and the GIS user community' : 'Reljefas: &copy; 2014 Esri',
 });
 
 // Wayback releases lack z18–19 tiles in many places: fall back to z17 and upscale.

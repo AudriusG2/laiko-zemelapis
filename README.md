@@ -34,13 +34,17 @@ python -m http.server 8777
 
 Tada atsidaryk http://localhost:8777. Vietos nustatymas veikia per `localhost` arba HTTPS.
 
+## ArcGIS raktas
+
+Esri palydovo nuotraukos ir reljefas gaunami su nemokamos ArcGIS Location Platform paskyros API raktu (tik „Basemaps“ teisė). Raktas veikia tik iš https://audriusg2.github.io ir http://localhost:8777 ir galioja iki **2027-09-24**. Prieš tą datą ArcGIS paskyroje, elemente „Laiko zemelapis“, sukurk naują raktą ir pakeisk `ESRI_KEY` faile `app.js`.
+
 ## Duomenų šaltiniai
 
 | Kas | Šaltinis | Licencija |
 |---|---|---|
 | Istorinės sienos (`data/world_*.geojson`) | [historical-basemaps](https://github.com/aourednik/historical-basemaps), A. Ourednik | GPL-3.0 |
 | Gatvių žemėlapis, vietų paieška | [OpenStreetMap](https://www.openstreetmap.org/copyright), Nominatim | ODbL |
-| Palydovo nuotraukos, jų archyvas, reljefas | Esri World Imagery, World Imagery Wayback, World Shaded Relief | Esri naudojimo sąlygos |
+| Palydovo nuotraukos, jų archyvas, reljefas | Esri World Imagery, World Imagery Wayback, World Hillshade (ArcGIS Location Platform raktas) | Esri naudojimo sąlygos |
 | Topografinis žemėlapis | [OpenTopoMap](https://opentopomap.org) | CC-BY-SA |
 | Senieji Airijos ir pasaulio žemėlapiai | [National Library of Scotland](https://maps.nls.uk/) | CC-BY, vieša svetainė – su leidimu |
 | Belfasto, Omos ir Derio planai | Queen's University Belfast | be atviros licencijos |
