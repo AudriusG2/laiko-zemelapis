@@ -77,16 +77,21 @@ const LT = {
   'Tunisia': 'Tunisas', 'Ethiopia': 'Etiopija',
   'Iceland': 'Islandija', 'Kingdom of France': 'Prancūzijos karalystė', 'Carolingian Empire': 'Karolingų imperija',
   'West Francia': 'Vakarų Frankų karalystė', 'Neustria': 'Neustrija', 'Habsburg Netherlands': 'Habsburgų Nyderlandai',
-  'Hallstatt culture': 'Halštato kultūra', 'Britany': 'Bretanė', 'Urnfield cultures': 'Urnų laukų kultūros',
+  'Hallstatt culture': 'Halštato kultūra', 'Britany': 'Bretanė', 'Urnfield cultures': (y, c) => (c && c.bi ? 'Bronzos amžiaus kultūros' : 'Urnų laukų kultūros'),
   'Beaker': 'Varpinių taurių kultūra', 'Neanderthal': 'Neandertaliečiai',
+  // The data's Urnfield polygon also covers the British Isles, which had their own Bronze Age cultures.
   // Britain and Ireland. The data draws Ireland as one polygon, often inside a British one, so some
   // labels depend on where on the island you are (c.ie = in Ireland, c.fs = in the later Free State).
   'Irlanda': 'Airija (gėlų karalystės)',
   'Celts': (y, c) => (c && c.ie ? 'Keltai (gėlai)' : 'Keltai'),
-  'Celtic kingdoms': (y, c) => (c && c.ie ? 'Airijos gėlų karalystės' : 'Keltų karalystės'),
+  'Celtic kingdoms': (y, c) => (c && c.ie ? (y >= 1171 ? 'Airija (gėlų karalystės ir anglonormanų Airijos lordystė)' : 'Airijos gėlų karalystės') : 'Keltų karalystės'),
   'English territory': (y, c) => (c && c.ie ? 'Airijos lordystė (Anglijos karaliaus valdos)' : 'Anglijos karaliaus valdos'),
   'England': (y, c) => (c && c.ie ? 'Airijos lordystė (Anglijos karūna)' : 'Anglijos karalystė'),
-  'England and Ireland': (y, c) => (c && c.ie ? (y < 1542 ? 'Airijos lordystė' : 'Airijos karalystė (Anglijos karūna)') : 'Anglijos karalystė'),
+  'England and Ireland': (y, c) => {
+    const cw = y >= 1649 && y < 1660; // the Commonwealth: no crown between 1649 and 1660
+    if (c && c.ie) return y < 1542 ? 'Airijos lordystė' : cw ? 'Airija (Anglijos Respublikos užkariaujama)' : 'Airijos karalystė (Anglijos karūna)';
+    return cw ? 'Anglijos Respublika (Sandrauga)' : 'Anglijos karalystė';
+  },
   'Kingdom of Ireland': 'Airijos karalystė',
   'United Kingdom of Great Britain and Ireland': (y, c) => {
     if (y < 1922) return 'Didžiosios Britanijos ir Airijos Jungtinė Karalystė';
@@ -99,7 +104,7 @@ const LT = {
   'Scotland': 'Škotijos karalystė', 'Angevin Empire': 'Anžu imperija', 'Wessex': 'Veseksas', 'Mercia': 'Mersija',
   'Northumbria': 'Nortumbrija', 'Kent': 'Kentas', 'Essex': 'Eseksas', 'Cantia': 'Kentas', 'Welsh': 'Velsiečių karalystės',
   'Picts': 'Piktai', 'Scots': 'Škotai (Dal Riata)', 'Anglo-Saxons': 'Anglosaksai', 'Dumnonia': 'Dumnonija',
-  'Dumonii': 'Dumnonai', 'Rome (Constantinus)': 'Romos imperija (Konstantino valdos)',
+  'Dumonii': 'Dumnonai', 'Rome (Constantinus)': 'Romos imperija (Konstancijaus Chloro valdos)', // the data's 'Constantinus' is Constantius I
 };
 
 // Corrupted names in the source data.
@@ -389,13 +394,16 @@ function hereAt(year) {
   return hit ? { name: ltName(hit.e.name, year, placeCtx(state.loc.lat, state.loc.lng)), fi: hit.e.fi, approx: hit.approx } : { name: null };
 }
 
-// Where on the island of Ireland a point is: the 1938 data separates Éire from Northern Ireland.
+// Where a point is: in the British Isles (bi), on the island of Ireland (ie; Kintyre and the sea off
+// Pembrokeshire excluded), and in the later Free State (fs, from the 1938 data, which separates Éire from
+// Northern Ireland; coastal places use the nearest 1938 polygon like every other year).
 function placeCtx(lat, lng) {
-  const ie = lat > 51.38 && lat < 55.46 && lng > -10.76 && lng < -5.39;
-  if (!ie) return { ie: false };
+  const bi = lat > 49.85 && lat < 61 && lng > -11 && lng < 1.8 && !(lat < 50.2 && lng > -1) && !(lat < 51.05 && lng > 1.4);
+  const ie = lat > 51.38 && lat < 55.46 && lng > -10.76 && lng < -5.39 && !(lat > 55.25 && lng > -6.05) && !(lat < 52.0 && lng > -6.0);
+  if (!ie) return { ie: false, bi };
   const idx = idxCache.get(1938);
-  const h = idx ? lookupStrict(idx, lat, lng) : null;
-  return { ie: true, fs: h && h.e.name ? h.e.name === 'Ireland' : null };
+  const h = idx ? lookup(idx, lat, lng) : null;
+  return { ie: true, bi, fs: h && h.e.name ? h.e.name === 'Ireland' : null };
 }
 
 // ---------- State ----------------------------------------------------------
@@ -427,14 +435,12 @@ function buildStops() {
 const stopKey = (s) => (s ? `${s.kind}|${s.year}|${s.map ? s.map.id : s.id || ''}` : '');
 
 function rebuildStops() {
-  const cur = stopKey(state.stops[state.idx]);
+  const old = state.stops[state.idx];
+  const cur = stopKey(old);
   state.stops = buildStops();
   range.max = state.stops.length - 1;
   let i = state.stops.findIndex((s) => stopKey(s) === cur);
-  if (i < 0) {
-    const y = state.stops[state.idx] ? state.stops[state.idx].year : START_YEAR;
-    i = nearestStop(y, (s) => s.kind === 'hist');
-  }
+  if (i < 0) i = nearestStop(old ? old.year : START_YEAR, (s) => s.kind === 'hist');
   renderTicks();
   return i;
 }
@@ -447,12 +453,14 @@ function nearestStop(year, filter = () => true) {
 
 // ---------- Map ------------------------------------------------------------
 
-const map = L.map('map', { zoomControl: false, worldCopyJump: true, minZoom: 2 })
+const map = L.map('map', { zoomControl: false, worldCopyJump: true, minZoom: 2, maxZoom: 19 })
   .setView([state.loc.lat, state.loc.lng], 6);
 L.control.zoom({ position: 'bottomright' }).addTo(map);
 L.control.scale({ position: 'bottomleft', imperial: false }).addTo(map);
 
 map.createPane('thenTiles').style.zIndex = 300;
+// County sheets get their own pane so their paper margins blend only with each other (see .county-sheet).
+map.createPane('thenCounties').style.zIndex = 301;
 map.createPane('thenVec').style.zIndex = 410;
 map.createPane('famousPane').style.zIndex = 620;
 map.createPane('mePane').style.zIndex = 660;
@@ -514,10 +522,11 @@ const BLANK_TILE = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALA
 function regionalLayer(r) {
   if (r._layer) return r._layer;
   // Hidden below the zoom the source serves; enlarged above its last real zoom.
-  const common = { pane: 'thenTiles', minZoom: r.minZoom, maxZoom: 20, maxNativeZoom: r.maxZoom, errorTileUrl: BLANK_TILE };
+  const common = { pane: 'thenTiles', minZoom: r.minZoom, maxZoom: 19, maxNativeZoom: r.maxZoom, errorTileUrl: BLANK_TILE };
   if (r.kind === 'counties') {
+    // Each county sheet has opaque paper outside the county; 'darken' lets the neighbour show through it.
     r._layer = L.layerGroup(Object.entries(r.counties).map(([county, b], i) =>
-      L.tileLayer(r.url, { ...common, ...(i === 0 ? { attribution: r.attribution } : {}), county, bounds: L.latLngBounds(b) })));
+      L.tileLayer(r.url, { ...common, pane: 'thenCounties', className: 'county-sheet', ...(i === 0 ? { attribution: r.attribution } : {}), county, bounds: L.latLngBounds(b) })));
   } else if (r.kind === 'arcgis-export') {
     r._layer = new ArcExportLayer(r.url, { ...common, bounds: L.latLngBounds(r.bounds), attribution: r.attribution, format: r.format });
   } else {
@@ -549,7 +558,7 @@ const range = $('#tl-range');
 function dividerPx() { return Math.round(stage.clientWidth * state.divider); }
 
 function updateClip() {
-  const panes = [map.getPane('thenTiles'), map.getPane('thenVec')];
+  const panes = [map.getPane('thenTiles'), map.getPane('thenCounties'), map.getPane('thenVec')];
   panes.forEach((p) => { p.style.display = state.mode !== 'now' ? '' : 'none'; });
   divider.hidden = state.mode !== 'compare';
   if (state.mode !== 'compare') { panes.forEach((p) => { p.style.clip = ''; }); return; }
@@ -887,11 +896,21 @@ function drawHist(gj, year) {
     pane: 'thenVec',
     style: (f) => styleFor(f, here),
     onEachFeature: (f, layer) => {
-      const nm = ltName(f.properties && f.properties.NAME, year);
-      layer.bindTooltip(
-        nm ? `${esc(nm.lt)}${nm.orig ? ` <span class="orig">· ${esc(nm.orig)}</span>` : ''}` : 'Duomenų nėra',
-        { sticky: true, className: 'poly-tip', direction: 'top', offset: [0, -8] },
-      );
+      const raw = f.properties && f.properties.NAME;
+      const label = (ll) => {
+        const nm = ltName(raw, year, ll && placeCtx(ll.lat, ll.lng));
+        return nm ? `${esc(nm.lt)}${nm.orig ? ` <span class="orig">· ${esc(nm.orig)}</span>` : ''}` : 'Duomenų nėra';
+      };
+      let tip = label();
+      layer.bindTooltip(tip, { sticky: true, className: 'poly-tip', direction: 'top', offset: [0, -8] });
+      // Names such as 'England and Ireland' read differently in Ireland and in Britain.
+      const orig = cleanName(raw);
+      if (orig && typeof (LT[orig] ?? LT[orig.replace(/-/g, ' ')] ?? LT[orig.replace(/ /g, '-')]) === 'function') {
+        layer.on('mousemove', (e) => {
+          const t = label(e.latlng.wrap());
+          if (t !== tip) { tip = t; layer.setTooltipContent(t); }
+        });
+      }
       layer.on('mouseover', (e) => {
         if (state.mode === 'compare' && e.containerPoint && e.containerPoint.x > dividerPx()) layer.closeTooltip();
       });

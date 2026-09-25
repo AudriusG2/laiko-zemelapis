@@ -234,6 +234,8 @@ body.picking #btn-pick { background: var(--then); border-color: var(--then); col
 }
 .leaflet-tooltip.here-tip::before { border-top-color: var(--then); }
 @media (prefers-color-scheme: dark) { .leaflet-tooltip.here-tip { color: #0e161a; } }
+/* NLS county sheets: blank paper outside a county must not hide the neighbouring county. */
+.county-sheet { mix-blend-mode: darken; }
 .me-pin { width: 22px; height: 22px; border-radius: 50%; background: var(--now); border: 3px solid #fff; box-shadow: 0 0 0 6px rgba(31,111,120,.25), 0 2px 6px rgba(0,0,0,.35); }
 .leaflet-control-attribution { font-size: 10.5px; }
 

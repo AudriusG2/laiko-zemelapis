@@ -60,7 +60,7 @@ window.REGIONAL_MAPS = [
     minZoom: 10, maxZoom: 17, zoom: 15, license: 'local', attribution: `OS Six-Inch Ireland, 1st edition. ${NLS}` },
   { id: 'londonderry-1837', year: 1837, when: '1837', t: 'Londonderio grafystės žemėlapis', short: 'Londonderio gr. 1837', region: 'Londonderio grafystė',
     kind: 'xyz', url: 'https://warper.wmflabs.org/maps/tile/2290/{z}/{x}/{y}.png', bounds: [[54.4888, -7.4895], [55.3142, -6.3591]],
-    cover: [[54.6241, -7.4383], [55.2084, -6.3113]], minZoom: 8, maxZoom: 11, zoom: 10, license: 'open',
+    cover: [[54.6241, -7.4206], [55.2084, -6.44]], minZoom: 8, maxZoom: 11, zoom: 10, license: 'open',
     attribution: 'County Londonderry (1837), Wikimedia Commons, viešoji nuosavybė; georeferencija <a href="https://warper.wmflabs.org/maps/2290">Wikimaps Warper</a>' },
   { id: 'omagh-1854', year: 1854, when: '1854', t: 'Omos Ordnance Survey planas', short: 'Oma 1854', region: 'Oma',
     kind: 'xyz', url: `${AGOL_QUB}/Omagh1854/MapServer/tile/{z}/{y}/{x}`, bounds: [[54.5957, -7.3203], [54.607, -7.2813]],
