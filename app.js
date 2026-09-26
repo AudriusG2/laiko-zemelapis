@@ -1047,7 +1047,10 @@ function refreshHere() {
   const ev = idxCache.has(2010) ? eventsFor(state.loc.lat, state.loc.lng).filter((e) => e.from <= y && e.to >= y) : [];
   if (ev.length) {
     const shown = ev.slice(-3).map((e) => `<b>${esc(e.t)}</b> <span class="orig">(${esc(e.when)})</span>`).join(' · ');
-    html += `<div class="here-ev">Tuo metu: ${shown}${ev.length > 3 ? ` <span class="orig">ir dar ${ev.length - 3}</span>` : ''}</div>`;
+    const more = ev.length - 3;
+    // Lithuanian numeral agreement: 1 įvykis, 2–9 įvykiai, 10–20 įvykių.
+    const word = more % 10 === 1 && more % 100 !== 11 ? 'įvykis' : more % 10 >= 2 && (more % 100 < 10 || more % 100 > 20) ? 'įvykiai' : 'įvykių';
+    html += `<div class="here-ev">Tuo metu: ${shown}${more > 0 ? ` <span class="orig">ir dar ${more} ${word}</span>` : ''}</div>`;
   }
   $('#tl-here').innerHTML = html;
   meMarker.setTooltipContent(esc(tip));

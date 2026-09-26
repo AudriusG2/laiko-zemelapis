@@ -13,6 +13,7 @@ Kairėje skirtuko pusėje rodoma praeitis, dešinėje – dabartinis žemėlapis
 - **Senieji žemėlapiai.** Georeferencuoti seni žemėlapiai atsiranda laiko juostoje tik tada, kai jie dengia tavo vietą. Pavyzdžiui, Šiaurės Airijoje – Ordnance Survey žemėlapiai nuo 1830 m., Belfasto planai nuo 1685 m.; Lietuvoje – Rusijos trijų varstų žemėlapis, tarpukario žemėlapiai ir Vilniaus planai.
 - **Palyginimas.** Trys režimai: „Tik tada“, „Palyginti“ (skirtukas per vidurį) ir „Tik dabar“. Dabartinis žemėlapis gali būti gatvių, palydovo arba topografinis.
 - **Kas čia buvo.** Sąrašas, kokiai valstybei ar kultūrai tavo vieta priklausė kiekvienu laikotarpiu ir kokie senieji žemėlapiai ją rodo. Paspaudus eilutę, žemėlapis persikelia į tą laiką.
+- **Istoriniai įvykiai.** 111 patikrintų įvykių Lietuvai ir Airijai bei Šiaurės Airijai: valstybės kūrimasis, okupacijos, trėmimai, Holokaustas, partizanų karas, Didysis badas, „Neramumai“ ir vietiniai įvykiai (pvz., Danganone, Deryje, Kaune, Vilniuje). Po laiko juosta rodoma, kas tuo metu vyko tavo vietovėje.
 - **Garsūs žemėlapiai.** 77 svarbiausi istorijos žemėlapiai nuo Pavlovo mamuto ilties iki Google Maps, tarp jų 18 Airijos žemėlapių: data, aprašymas lietuviškai, vaizdas ir vieta žemėlapyje.
 
 ## Dvi versijos
@@ -53,6 +54,7 @@ Esri palydovo nuotraukos ir reljefas gaunami su nemokamos ArcGIS Location Platfo
 | „Down Survey“ | [Trinity College Dublin](https://www.downsurvey.ie/) | be atviros licencijos |
 | Belfastas 1685 ir 1791, Londonderio grafystė 1837, GSGS 3906, trijų varstų žemėlapis 1872 | Wikimedia Commons, Wikimaps Warper, Map Warper | viešoji nuosavybė |
 | Garsių žemėlapių vaizdai | Vikipedija ir Wikimedia Commons | pagal kiekvieno failo licenciją |
+| Istoriniai įvykiai (`events.js`) | sudaryta pagal Vikipediją, VLE ir kitus šaltinius, faktai patikrinti | GPL-3.0 (kaip visas projektas) |
 | Žemėlapio biblioteka | [Leaflet](https://leafletjs.com) | BSD-2-Clause |
 
 Senovės laikotarpių sienos yra apytikslės: seniausiems laikams duomenų rinkinyje nurodomos archeologinės kultūros, o ne valstybės. Kai kuriems metams (pvz., 1100 ir 1200 m.) Lietuvos teritorijai duomenų nėra. Airija duomenyse iki 1930 m. nubraižyta kaip vienas plotas, todėl programėlė pavadinimus patikslina pagal tai, kurioje salos dalyje esi.
