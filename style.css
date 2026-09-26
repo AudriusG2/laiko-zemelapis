@@ -177,6 +177,11 @@ body.picking #btn-pick { background: var(--then); border-color: var(--then); col
 .hist-list li .ev-d a { white-space: nowrap; }
 .here-ev { font-weight: 400; font-size: 13.5px; margin-top: 3px; color: var(--ink); }
 .here-ev b { font-weight: 600; }
+.online-status { margin: 0 0 8px; font-size: 13px; color: var(--muted); }
+.more-maps { margin: 0 0 12px; font-size: 13px; color: var(--muted); }
+.hist-list li .dot.sheet { border-radius: 2px; background: var(--then); opacity: .55; width: 10px; height: 10px; margin-left: 3px; }
+.hist-list li.sheet .what { font-weight: 500; }
+.hist-list li .orig a { white-space: nowrap; }
 .hist-list { list-style: none; margin: 0; padding: 0; position: relative; }
 .hist-list::before { content: ""; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 2px; background: var(--line); }
 .hist-list li {

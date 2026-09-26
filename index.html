@@ -84,6 +84,8 @@
         <label class="chip"><input type="checkbox" id="flt-maps" checked> Senieji žemėlapiai</label>
         <label class="chip"><input type="checkbox" id="flt-events" checked> Įvykiai<span id="flt-events-n"></span></label>
       </div>
+      <p id="online-status" class="online-status" role="status" aria-live="polite" hidden></p>
+      <p class="more-maps">Daugiau senų žemėlapių šioje vietoje: <span id="more-maps"></span></p>
       <ol id="hist-list" class="hist-list"></ol>
       <p class="source">Sienos: <a href="https://github.com/aourednik/historical-basemaps" target="_blank" rel="noopener">historical-basemaps</a> (A. Ourednik, GPL-3.0). Senųjų laikų ribos apytikslės. „Artimiausia sritis“ reiškia, kad supaprastintos pakrantės nepasiekė tavo taško ir parodyta artimiausia valstybė iki 25 km.</p>
     </div>
@@ -117,6 +119,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="regional.js"></script>
 <script src="events.js"></script>
+<script src="allmaps.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

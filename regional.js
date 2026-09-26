@@ -20,6 +20,9 @@ const QUB = "Queen's University Belfast (GIS Research &amp; Teaching Unit); © C
 const AGOL_LT = 'https://tiles.arcgis.com/tiles/kla6QEoN1wAmqwT1/arcgis/rest/services';
 const AGOL_QUB = 'https://tiles.arcgis.com/tiles/HRuPlEcokYlz4mdz/arcgis/rest/services';
 const NLS_OS = 'https://mapseries-tilesets.s3.amazonaws.com/os';
+const RUMSEY = 'David Rumsey Map Collection, David Rumsey Map Center, Stanford University Libraries (<a href="https://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>)';
+const AGOL_RUMSEY = 'https://tiles.arcgis.com/tiles/IEuSomXfi6iB7a25/arcgis/rest/services';
+const AGOL_VDU = 'https://tiles.arcgis.com/tiles/G9UFYDnivWeZc6i4/arcgis/rest/services';
 
 const COUNTIES_E1 = {"antrim":[[54.4536,-6.7152],[55.3174,-5.635]],"armagh":[[54.0344,-6.8872],[54.5598,-6.2705]],"carlow":[[52.4426,-7.1453],[52.9679,-6.404]],"cavan":[[53.7495,-8.0825],[54.3332,-6.7234]],"clare":[[52.5251,-9.9763],[53.1699,-8.3722]],"cork":[[51.4026,-10.2372],[52.3923,-7.8193]],"donegal":[[54.4123,-8.8696],[55.3996,-6.8732]],"down":[[54.049,-6.4647],[54.69,-5.3949]],"dublin":[[53.1434,-6.659],[53.669,-5.911]],"fermanagh":[[54.0935,-8.2875],[54.6203,-7.0681]],"galway":[[52.8731,-10.2927],[53.7445,-7.9264]],"kerry":[[51.6763,-10.6245],[52.6044,-9.044]],"kildare":[[52.8519,-7.1731],[53.4925,-6.4225]],"kilkenny":[[52.2135,-7.7855],[52.9123,-6.9049]],"kings":[[52.8378,-8.1169],[53.4225,-6.9286]],"leitrim":[[53.783,-8.4556],[54.4823,-7.5431]],"limerick":[[52.2385,-9.4255],[52.7641,-8.1132]],"londonderry":[[54.6241,-7.4383],[55.2084,-6.3113]],"longford":[[53.5133,-8.087],[53.9821,-7.3283]],"louth":[[53.6841,-6.763],[54.1521,-6.0046]],"mayo":[[53.4659,-10.3099],[54.3922,-8.5078]],"meath":[[53.3392,-7.3464],[53.9228,-6.1501]],"monaghan":[[53.8786,-7.3791],[54.4623,-6.4701]],"queens":[[52.78,-7.7844],[53.2499,-6.8971]],"roscommon":[[53.2549,-8.9142],[54.1258,-7.8623]],"sligo":[[53.894,-9.2],[54.4772,-8.1378]],"tipperary":[[52.1952,-8.4875],[53.1805,-7.3167]],"tyrone":[[54.2859,-7.9404],[54.9837,-6.4089]],"waterford":[[51.8968,-8.2365],[52.3648,-6.9378]],"westmeath":[[53.2735,-7.9868],[53.799,-6.9411]],"wexford":[[52.0914,-7.0297],[52.8453,-6.1493]],"wicklow":[[52.6758,-6.869],[53.2583,-5.9811]]};
 const COUNTIES_R1 = {"antrim":[[54.4536,-6.7152],[55.3174,-5.635]],"armagh":[[54.0344,-6.8872],[54.5598,-6.2705]],"carlow":[[52.4426,-7.1453],[52.9679,-6.404]],"cavan":[[53.7495,-8.0825],[54.3332,-6.7234]],"clare":[[52.5251,-9.9763],[53.1699,-8.3722]],"cork":[[51.4026,-10.2372],[52.3923,-7.8193]],"donegal":[[54.4123,-8.8696],[55.3996,-6.8732]],"down":[[54.049,-6.4647],[54.69,-5.3949]],"dublin":[[53.1434,-6.659],[53.669,-5.911]],"fermanagh":[[54.0935,-8.2875],[54.6203,-7.0681]],"galway":[[52.8731,-10.2927],[53.7445,-7.9264]],"kerry":[[51.6763,-10.6245],[52.6044,-9.044]],"kildare":[[52.8519,-7.1731],[53.4925,-6.4225]],"kilkenny":[[52.2135,-7.7855],[52.9123,-6.9049]],"kings":[[52.8378,-8.1169],[53.4225,-6.9286]],"leitrim":[[53.783,-8.4556],[54.4823,-7.5431]],"limerick":[[52.2385,-9.4255],[52.7641,-8.1132]],"londonderry":[[54.6241,-7.4383],[55.2084,-6.3113]],"longford":[[53.5133,-8.087],[53.9821,-7.3283]],"louth":[[53.6841,-6.763],[54.1521,-6.0046]],"mayo":[[53.4659,-10.3099],[54.3922,-8.5078]],"meath":[[53.3392,-7.3464],[53.9228,-6.1501]],"monaghan":[[53.8787,-7.3785],[54.4623,-6.4697]],"queens":[[52.78,-7.7844],[53.2499,-6.8971]],"roscommon":[[53.2549,-8.9142],[54.1258,-7.8623]],"sligo":[[53.894,-9.2],[54.4772,-8.1378]],"tipperary":[[52.1952,-8.4875],[53.1805,-7.3167]],"tyrone":[[54.2859,-7.9404],[54.9837,-6.4089]],"waterford":[[51.8968,-8.2365],[52.3648,-6.9378]],"westmeath":[[53.2735,-7.9868],[53.799,-6.9411]],"wexford":[[52.0914,-7.0297],[52.8453,-6.1493]],"wicklow":[[52.6758,-6.869],[53.2583,-5.9811]]};
@@ -43,6 +46,20 @@ window.REGIONAL_MAPS = [
   { id: 'imw', year: 1930, when: '1912–1955', t: 'Tarptautinis pasaulio žemėlapis 1:1 000 000', short: 'IMW 1:1 000 000', region: 'Pasaulis',
     kind: 'xyz', url: 'https://geo.nls.uk/mapdata3/imw/{z}/{x}/{y}.png', bounds: [[-56.04, -180], [80.21, 180]], covers: IMW_SHEETS,
     minZoom: 4, maxZoom: 11, zoom: 9, license: 'local', attribution: `International Map of the World 1:1 000 000. ${NLS}` },
+
+  // ---- David Rumsey's own georeferenced maps on ArcGIS Online (CC BY-NC-SA 3.0) ----
+  { id: 'popple-1733', year: 1733, when: '1733', t: 'H. Popple’io „Britų imperija Amerikoje“', short: 'Popple 1733', region: 'Šiaurės Amerika',
+    kind: 'xyz', url: `${AGOL_RUMSEY}/North_America_1733/MapServer/tile/{z}/{y}/{x}`, bounds: [[2.478, -108.384], [55.417, -44.043]],
+    minZoom: 3, maxZoom: 9, zoom: 7, license: 'open', attribution: RUMSEY },
+  { id: 'melish-1816', year: 1816, when: '1816', t: 'J. Melisho Jungtinių Valstijų žemėlapis', short: 'Melish 1816', region: 'JAV',
+    kind: 'xyz', url: `${AGOL_RUMSEY}/United_States_1816/MapServer/tile/{z}/{y}/{x}`, bounds: [[16.836, -138.229], [60.073, -42.657]],
+    minZoom: 3, maxZoom: 9, zoom: 7, license: 'open', attribution: RUMSEY },
+  { id: 'cassini-france', year: 1780, when: '1750–1815', t: 'Cassini Prancūzijos žemėlapis', short: 'Cassini', region: 'Prancūzija',
+    kind: 'xyz', url: `${AGOL_RUMSEY}/France_1750/MapServer/tile/{z}/{y}/{x}`, bounds: [[42.251, -5.328], [51.265, 8.783]],
+    minZoom: 6, maxZoom: 12, zoom: 11, license: 'open', attribution: RUMSEY },
+  { id: 'nyc-1836', year: 1836, when: '1836', t: 'Niujorko miesto ir apygardos topografinis žemėlapis', short: 'Niujorkas 1836', region: 'Niujorkas',
+    kind: 'xyz', url: `${AGOL_RUMSEY}/New_York_City_1836/MapServer/tile/{z}/{y}/{x}`, bounds: [[40.647, -74.1], [40.904, -73.811]],
+    minZoom: 11, maxZoom: 17, zoom: 14, license: 'open', attribution: RUMSEY },
 
   // ---- Ireland and Northern Ireland ----
   { id: 'down-survey', year: 1658, when: '1656–1658', t: 'Petty „Down Survey“ grafysčių žemėlapiai', short: 'Down Survey', region: 'Airija',
@@ -73,6 +90,9 @@ window.REGIONAL_MAPS = [
   { id: 'os6-r1', year: 1855, when: '1838–1865', t: 'Ordnance Survey šešių colių žemėlapis, 1-oji peržiūra', short: 'OS 6 colių, peržiūra', region: 'Airija',
     kind: 'counties', url: `${NLS_OS}/{county}1/{z}/{x}/{y}.png`, counties: COUNTIES_R1, bounds: IRELAND,
     minZoom: 10, maxZoom: 17, zoom: 15, license: 'local', attribution: `OS Six-Inch Ireland, 1st revision. ${NLS}` },
+  { id: 'os1-outline', year: 1865, when: '1860–1878', t: 'Ordnance Survey vieno colio žemėlapis (kontūrinis)', short: 'OS 1 colio, kontūr.', region: 'Airija',
+    kind: 'xyz', url: `${NLS_OS}/ireland_1inch_1st_outline/{z}/{x}/{y}.png`, bounds: [[51.2647, -10.7471], [55.5449, -4.9171]],
+    minZoom: 7, maxZoom: 16, zoom: 12, license: 'local', attribution: `OS One-inch Ireland (Outline), 1860–1878. ${NLS}` },
   { id: 'os1-hills', year: 1870, when: '1859–1895', t: 'Ordnance Survey vieno colio žemėlapis (su reljefu)', short: 'OS 1 colio', region: 'Airija',
     kind: 'xyz', url: `${NLS_OS}/ireland_1inch_1st_hills/{z}/{x}/{y}.png`, bounds: [[51.2647, -10.7471], [55.5449, -4.9171]],
     minZoom: 7, maxZoom: 15, zoom: 12, license: 'local', attribution: `OS One-inch Ireland (Hills), 1859–1895. ${NLS}` },
@@ -109,6 +129,14 @@ window.REGIONAL_MAPS = [
     minZoom: 12, maxZoom: 18, zoom: 15, license: 'local', attribution: QUB },
 
   // ---- Lithuania ----
+  { id: 'ldk-xvi', year: 1560, when: 'XVI a. vidurys (žemėlapis 1928 m.)', t: 'LDK XVI a. viduryje – istorinė rekonstrukcija (J. Jakubowski)', short: 'LDK XVI a.', region: 'Lietuva ir Baltarusija',
+    kind: 'xyz', url: `${AGOL_VDU}/WKL_w_XVI_wieku_Jakubowski/MapServer/tile/{z}/{y}/{x}`, bounds: [[50.94, 19.6], [56.58, 33.12]],
+    minZoom: 5, maxZoom: 10, zoom: 8, license: 'local',
+    attribution: 'J. Jakubowski, <i>Atlas historyczny Polski</i> (1928); Archiwum Map WIG; georeferencija M. Pileckas, VDU' },
+  { id: 'rejon-wilno-1925', year: 1925, when: '1925', t: 'Vilniaus apylinkių topografinis žemėlapis „Rejon Wilno“ 1:25 000', short: 'Rejon Wilno 1925', region: 'Vilnius',
+    kind: 'xyz', url: `${AGOL_VDU}/Vilnius_Rejon_Wilno_1925/MapServer/tile/{z}/{y}/{x}`, bounds: [[54.5779, 25.0708], [54.8384, 25.5374]],
+    minZoom: 11, maxZoom: 15, zoom: 14, license: 'local',
+    attribution: 'Mapy WIG (mapywig.org); georeferencija M. Pileckas, VDU Švietimo akademija' },
   { id: 'vilnius-1840', year: 1840, when: '1840', t: 'Vilniaus miesto planas', short: 'Vilnius 1840', region: 'Vilnius',
     kind: 'xyz', url: `${AGOL_LT}/71918p1/MapServer/tile/{z}/{y}/{x}`, bounds: [[54.6629, 25.251], [54.7124, 25.3174]],
     minZoom: 12, maxZoom: 17, zoom: 15, license: 'local', attribution: LMAVB },

@@ -148,7 +148,7 @@ const FAMOUS = [
   { y: 1275, when: '~1275 m.', t: 'Carta Pisana', ll: [43.716, 10.401], d: 'Seniausias išlikęs portolanas, t. y. jūrininkų žemėlapis (jūrlapis) su kompaso krypčių tinklu, vaizduojantis Viduržemio jūrą.', w: 'Carta Pisana' },
   { y: 1290, when: '~1234–1300 m.', t: 'Ebstorfo žemėlapis', ll: [53.03, 10.41], d: 'Didžiausias viduramžių pasaulio žemėlapis (3,6 × 3,6 m), kuriame Kristus apglėbia pasaulį. Originalas sudegė 1943 m., išliko kopijos.', w: 'Ebstorf Map' },
   { y: 1300, when: '~1300 m.', t: 'Herefordo Mappa Mundi', ll: [52.054, -2.716], d: 'Didžiausias išlikęs viduramžių pasaulio žemėlapis. Centre Jeruzalė, aplink ją Biblijos istorijos, pabaisos ir miestai.', w: 'Hereford Mappa Mundi' },
-  { y: 1360, when: '~1360 m.', t: 'Gougho žemėlapis', ll: [51.754, -1.254], d: 'Seniausias išlikęs Didžiosios Britanijos kelių ir miestų žemėlapis, stebėtinai tikslus savo laikui.', w: 'Gough Map' },
+  { y: 1360, when: '~1360 m.', t: 'Gougho žemėlapis', ll: [51.754, -1.254], d: 'Seniausias išlikęs Didžiosios Britanijos kelių ir miestų žemėlapis, stebėtinai tikslus savo laikui.', w: 'Gough Map', links: [{ href: 'https://digital.bodleian.ox.ac.uk/objects/e4dc07a6-3ec8-414a-aa92-2e9815f93276/', label: 'Bodlio biblioteka ↗' }] },
   { y: 1375, when: '1375 m.', t: 'Katalonų atlasas', ll: [39.57, 2.65], d: 'Abraomo Kreskeso Majorkoje sukurtas pasaulio žemėlapis su Marko Polo kelionėmis ir Malio valdovu Musa, laikančiu aukso luitą.', w: 'Catalan Atlas', img: 'Atlas Catalan BnF btv1b52509636n Sheet 3.jpg' },
   { y: 1389, when: '1389 m.', t: 'Da Ming Hunyi Tu', ll: [32.06, 118.79], d: 'Mingų dinastijos pasaulio žemėlapis ant šilko, apimantis Kiniją, Aziją, Europą ir Afriką.', w: 'Da Ming Hunyi Tu' },
   { y: 1402, when: '1402 m.', t: 'Kangnido', ll: [37.57, 126.98], d: 'Korėjos pasaulio žemėlapis, kuriame parodyta ir Europa bei Afrika, likus 90 metų iki Kolumbo kelionės.', w: 'Gangnido' },
@@ -165,7 +165,7 @@ const FAMOUS = [
   { y: 1602, when: '1602 m.', t: 'Matteo Ricci „Kunyu Wanguo Quantu“', ll: [39.9, 116.4], d: 'Jėzuito misionieriaus pasaulio žemėlapis kinų kalba, pirmą kartą Kinijai parodęs Ameriką.', w: 'Kunyu Wanguo Quantu', img: 'Kunyu Wanguo Quantu by Matteo Ricci All panels.jpg' },
   { y: 1609, when: '1609 m.', t: 'Pirmieji teleskopiniai Mėnulio piešiniai', ll: [45.407, 11.877], d: 'Thomas Harriotas Anglijoje ir Galilėjus Padujoje pirmieji nupiešė Mėnulio paviršių, matytą pro teleskopą. Paveiksle – Galilėjaus piešiniai.', w: 'Selenography', img: "Galileo's sketches of the moon.png" },
   { y: 1613, when: '1613 m.', t: 'Radvilų (Makovskio) LDK žemėlapis', ll: [53.22, 26.68], d: 'Mikalojaus Kristupo Radvilos Našlaitėlio užsakytas, Tomo Makovskio parengtas ir Amsterdame išspausdintas Lietuvos Didžiosios Kunigaikštystės žemėlapis. Pirmasis išsamus Lietuvos žemėlapis, perspausdinamas dar daugiau nei šimtmetį.', w: 'Radziwiłł map' },
-  { y: 1620, when: '~1620 m.', t: 'Seldeno žemėlapis', ll: [24.87, 118.59], d: 'Kiniškas Rytų Azijos jūrų prekybos kelių žemėlapis, dabar saugomas Oksforde.', w: 'Selden Map' },
+  { y: 1620, when: '~1620 m.', t: 'Seldeno žemėlapis', ll: [24.87, 118.59], d: 'Kiniškas Rytų Azijos jūrų prekybos kelių žemėlapis, dabar saugomas Oksforde.', w: 'Selden Map', links: [{ href: 'https://digital.bodleian.ox.ac.uk/objects/58b9518f-d5ea-4cb3-aa15-f42640c50ef3/', label: 'Bodlio biblioteka ↗' }] },
   { y: 1647, when: '1647 m.', t: 'Hevelijaus „Selenographia“', ll: [54.35, 18.65], d: 'Gdansko astronomas Johannesas Hevelijus išleido pirmąjį išsamų Mėnulio atlasą.', w: 'Selenographia, sive Lunae descriptio' },
   { y: 1662, when: '1662–1665 m.', t: 'Blaeu „Atlas Maior“', ll: [52.37, 4.89], d: 'Didžiausia ir brangiausia XVII a. knyga: 11 tomų ir apie 600 žemėlapių.', w: 'Atlas Maior' },
   { y: 1750, when: '1750–1815 m.', t: 'Cassini žemėlapis', ll: [48.853, 2.349], d: 'Keturių Cassini kartų sudarytas Prancūzijos žemėlapis. Pirmasis visos šalies žemėlapis, paremtas trianguliacija.', w: 'Cassini map' },
@@ -178,6 +178,12 @@ const FAMOUS = [
   { y: 1977, when: '1957–1977 m.', t: 'Marie Tharp vandenyno dugno žemėlapiai', ll: [41.004, -73.908], d: 'Tharp iš echolotų duomenų nubraižė Atlanto vandenyno dugno kalnagūbrį ir padėjo įrodyti žemynų dreifą.', w: 'Marie Tharp', img: 'Heezen and Tharp Bathymetric Map of the World, 1977.jpg' },
   { y: 2004, when: '2004 m.', t: 'OpenStreetMap', ll: [51.52, -0.1], d: 'Laisvas pasaulio žemėlapis, kurį kuria milijonai savanorių. Šios programėlės gatvių sluoksnis taip pat iš jo.', w: 'OpenStreetMap', img: 'OpenStreetMap homepage.png' },
   { y: 2005, when: '2005 m.', t: 'Google Maps ir Google Earth', ll: [37.422, -122.084], d: 'Interaktyvūs žemėlapiai ir palydovų nuotraukos tapo prieinami kiekvienam naršyklėje, o vėliau ir telefone.', w: 'Google Maps', noThumb: true },
+  { y: 1030, when: '~1020–1050 m. (kopija ~1190–1210 m.)', t: '„Įdomybių knygos“ pasaulio žemėlapis', ll: [30.05, 31.24], d: 'Anoniminis Fatimidų Egipto traktatas apie dangų ir Žemę, sudarytas apie 1020–1050 m. Jame yra du pasaulio žemėlapiai – apskritas ir stačiakampis. Stačiakampis – vienas pirmųjų žinomų pasaulio žemėlapių su grafiniu masteliu. Nepilną XII a. pabaigos–XIII a. pradžios kopiją 2002 m. įsigijo Bodlio biblioteka Oksforde. Paveiksle – stačiakampis pasaulio žemėlapis.', w: 'Book of Curiosities', img: 'Book-of-Curiosities-Bodleian.jpg', links: [{ href: 'https://digital.bodleian.ox.ac.uk/objects/748a9d50-5a3a-440e-ab9d-567dd68b6abb/', label: 'Bodlio biblioteka ↗' }] },
+  { y: 1920, when: '1920–1921 m.', t: 'National Geographic Europos žemėlapis po Paryžiaus taikos konferencijos', ll: [38.9053, -77.0381], d: 'Didelį Europos žemėlapį su naujomis, Paryžiaus taikos konferencijoje nustatytomis sienomis National Geographic draugijai parengė Bafalo įmonė Matthews-Northrup. Jis datuotas 1920 m., o išleistas kaip žurnalo „National Geographic Magazine“ 1921 m. vasario numerio priedas. Raudonos linijos žymi galutinai nustatytas ir dar nenuspręstas (punktyru) sienas, plebiscitų teritorijas ir tarptautines zonas, geltonos – sienas prieš Pirmąjį pasaulinį karą. Lietuva jau pažymėta kaip atskira valstybė, bet jos sienos dar nenuspręstos, Klaipėdos kraštas paliktas sąjungininkų valdžiai, o visa Airija vis dar priklauso Jungtinei Karalystei.', w: 'Paris Peace Conference (1919–1920)', img: 'Map of Europe showing countries as established by the Peace Conference at Paris (14773864899).jpg', credit: 'National Geographic Society, 1920 (išl. 1921 m. vasarį); skenas: <a href="https://commons.wikimedia.org/wiki/File:Map_of_Europe_showing_countries_as_established_by_the_Peace_Conference_at_Paris_(14773864899).jpg" target="_blank" rel="noopener">Norman B. Leventhal Map Center</a>, Bostono viešoji biblioteka (CC BY 2.0)' },
+  { y: 2010, when: '2010 m. duomenys', t: 'Lietuva pagal gyventojų skaičių (kartograma)', ll: [55.17, 23.88], d: 'Worldmapper tinklelio kartograma: kiekvienas žemėlapio langelis padidintas arba sumažintas pagal jame gyvenančių žmonių skaičių. Todėl Vilnius, Kaunas ir Klaipėda išsipučia, o retai gyvenamos vietovės susitraukia.', w: 'Cartogram', image: 'https://worldmapper.org/wp-content/uploads/2018/05/Grid_WPA_ltu_2010.png', credit: 'Kartograma: <a href="https://worldmapper.org/maps/gridded-population-ltu/" target="_blank" rel="noopener">Worldmapper</a> (B. Hennig) · <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.lt" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a>' },
+  { y: 2010, when: '2010 m. duomenys', t: 'Jungtinė Karalystė pagal gyventojų skaičių (kartograma)', ll: [54.0, -2.5], d: 'Worldmapper tinklelio kartograma, kurioje plotas proporcingas gyventojų skaičiui. Ji apima ir Šiaurės Airiją: matyti, kaip išsipučia Belfastas, o kaimiškos vietovės susitraukia.', w: 'Cartogram', image: 'https://worldmapper.org/wp-content/uploads/2013/10/gbr-768x811.png', credit: 'Kartograma: <a href="https://worldmapper.org/maps/gridded-population-gbr/" target="_blank" rel="noopener">Worldmapper</a> (B. Hennig) · <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.lt" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a>' },
+  { y: 2010, when: '2010 m. duomenys', t: 'Airija pagal gyventojų skaičių (kartograma)', ll: [53.0, -7.9], d: 'Worldmapper tinklelio kartograma, kurioje plotas proporcingas gyventojų skaičiui. Ji apima tik Airijos Respubliką: Šiaurės Airija pilka ir parodyta Jungtinės Karalystės kartogramoje.', w: 'Cartogram', image: 'https://worldmapper.org/wp-content/uploads/2018/04/Grid_WPA_irl_2010.png', credit: 'Kartograma: <a href="https://worldmapper.org/maps/gridded-population-irl/" target="_blank" rel="noopener">Worldmapper</a> (B. Hennig) · <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.lt" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a>' },
+  { y: 2017, when: '1990–2017 m.', t: 'Emigracija iš Lietuvos (kartograma)', ll: [54.687, 25.28], d: 'Pasaulio šalys padidintos pagal tai, kiek jose gyvena iš Lietuvos atvykusių žmonių (JT duomenys, 1990–2017 m.). Didžiausia – Jungtinė Karalystė, šalia jos Airija, ryški ir Rusija.', w: 'Cartogram', image: 'https://worldmapper.org/wp-content/uploads/2019/06/Migrants_Origin_Lithuania_1990to2017-1200x600.png', credit: 'Kartograma: <a href="https://worldmapper.org/maps/migration-from-lithuania-1990-2017/" target="_blank" rel="noopener">Worldmapper</a> · duomenys: JT DESA (2017) · <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.lt" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a>' },
 ];
 
 FAMOUS.push(...(window.EXTRA_FAMOUS || []));
@@ -436,13 +442,17 @@ const state = {
   history: [],
   famousSel: -1,
   openEvents: new Set(),
+  online: { key: '', allmaps: [], allmapsBusy: false, sheets: [], sheetsBusy: false },
   filters: { hist: true, maps: true, events: true, ...(store.get('tm.filters') || {}) },
 };
 
 const inBox = (b, lat, lng) => lat >= b[0][0] && lat <= b[1][0] && lng >= b[0][1] && lng <= b[1][1];
 function regionalFor(lat, lng) {
-  return REGIONAL.filter((r) => (r.counties ? Object.values(r.counties) : r.covers || [r.cover || r.bounds]).some((b) => inBox(b, lat, lng))
+  const fixed = REGIONAL.filter((r) => (r.counties ? Object.values(r.counties) : r.covers || [r.cover || r.bounds]).some((b) => inBox(b, lat, lng))
     && (!r.country || inCountry(r.country, lat, lng)) && (!r.probe || probeOk(r, lat, lng)));
+  // Maps found through Allmaps belong to the place they were searched for.
+  const dyn = state.online.key === placeKey(lat, lng) ? state.online.allmaps.filter((r) => IS_LOCAL || r.license === 'open') : [];
+  return fixed.concat(dyn);
 }
 
 // Present-day country at a point, from the 2010 border data (true until that file is loaded).
@@ -492,6 +502,108 @@ function eventsFor(lat, lng) {
     if (e.scope === 'near') return !!e.near && kmBetween(lat, lng, e.near[0], e.near[1]) <= e.near[2];
     return false;
   }).sort((a, b) => a.from - b.from || a.to - b.to);
+}
+
+const placeKey = (lat, lng) => `${lat.toFixed(3)},${lng.toFixed(3)}`;
+
+// Looks up online sources for the current place: Allmaps (maps georeferenced by libraries and
+// volunteers, added to the timeline) and the NLS sheet index (scanned OS sheets, listed with links).
+let refreshTimer = 0;
+function scheduleRefreshStops() {
+  clearTimeout(refreshTimer);
+  refreshTimer = setTimeout(refreshStops, 400);
+}
+function startOnline() {
+  const { lat, lng } = state.loc;
+  const key = placeKey(lat, lng);
+  state.online = { key, allmaps: [], allmapsBusy: !!window.AllmapsFinder, sheets: [], sheetsBusy: false };
+  renderOnlineStatus();
+  if (window.AllmapsFinder) {
+    AllmapsFinder.find(lat, lng, (e) => {
+      if (state.online.key !== key || state.online.allmaps.some((x) => x.id === e.id)) return;
+      state.online.allmaps.push(e);
+      scheduleRefreshStops();
+    }).finally(() => {
+      if (state.online.key !== key) return;
+      state.online.allmapsBusy = false;
+      renderOnlineStatus();
+    });
+  }
+  loadNlsSheets(lat, lng, key);
+}
+
+// NLS map finder index: every scanned sheet under the point (Great Britain and Ireland).
+const NLS_SERIES = {
+  OS_6inch_all_find: 'OS 6 colių', OS_one_inch_combined: 'OS 1 colio', OS_National_Grid_all_find: 'OS nacionalinio tinklelio',
+  OS_25000_uk: 'OS 1:25 000', OS_25inch_all_find: 'OS 25 colių', OS_Town_Plans: 'OS miestų planai', os_quarter_inch: 'OS ¼ colio',
+  os_half_inch: 'OS ½ colio', bart_half_combined: 'Bartholomew ½ colio', towns: 'Miestų planai',
+  International_Map_of_the_World: 'Tarptautinis pasaulio žemėlapis', German_naval_charts: 'Vokiečių jūrlapiai',
+};
+async function loadNlsSheets(lat, lng, key) {
+  if (!inBox([[49.1, -12.9], [61, 3]], lat, lng)) return;
+  const types = Object.keys(NLS_SERIES);
+  const cached = store.get('tm.nls.' + key);
+  let rows = cached && Date.now() - cached.t < 7 * 864e5 ? cached.v : null;
+  if (!rows) {
+    state.online.sheetsBusy = true;
+    renderOnlineStatus();
+    const url = 'https://geoserver.nls.uk/geoserver/wfs?' + new URLSearchParams({
+      service: 'WFS', version: '1.1.0', request: 'GetFeature', outputFormat: 'application/json',
+      typeName: types.map((t) => 'nls:' + t).join(','),
+      propertyName: types.map(() => '(IMAGE,SHEET,DATES,YEAR)').join(''),
+      CQL_FILTER: types.map(() => `INTERSECTS(the_geom,SRID=4326;POINT(${lng} ${lat}))`).join(';'),
+    });
+    try {
+      const r = await fetch(url);
+      const j = r.ok ? await r.json() : null;
+      rows = (j && j.features ? j.features : []).map((f) => {
+        const p = f.properties || {};
+        const type = String(f.id || '').split('.')[0];
+        const text = (v) => String(v == null ? '' : v).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+        return { type, image: String(p.IMAGE || ''), sheet: text(p.SHEET), dates: text(p.DATES), year: parseInt(p.YEAR, 10) };
+      }).filter((x) => x.image && /^\d+$/.test(x.image) && x.year > 1500 && !/in copyright/i.test(x.dates));
+      const seen = new Set();
+      rows = rows.filter((x) => (seen.has(x.image) ? false : seen.add(x.image))).sort((a, b) => a.year - b.year);
+      store.set('tm.nls.' + key, { t: Date.now(), v: rows });
+    } catch { rows = []; }
+  }
+  if (state.online.key !== key) return;
+  state.online.sheets = rows || [];
+  state.online.sheetsBusy = false;
+  renderOnlineStatus();
+  renderHistory();
+}
+
+function renderOnlineStatus() {
+  const o = state.online;
+  const parts = [];
+  if (o.allmapsBusy) parts.push('Allmaps: ieškoma senų žemėlapių šioje vietoje…');
+  else if (o.allmaps.length) {
+    const shown = o.allmaps.filter((r) => IS_LOCAL || r.license === 'open').length;
+    parts.push(`Allmaps: rasta ${o.allmaps.length}${shown !== o.allmaps.length ? `, svetainėje rodoma ${shown} (kiti – tik kompiuteryje)` : ''}`);
+  } else if (o.key) parts.push('Allmaps: čia georeferencijuotų žemėlapių dar nėra');
+  if (o.sheetsBusy) parts.push('NLS: ieškoma skenuotų lapų…');
+  else if (o.sheets.length) {
+    const n = o.sheets.length;
+    const w = n % 10 === 1 && n % 100 !== 11 ? 'skenuotas lapas' : n % 10 >= 2 && (n % 100 < 10 || n % 100 > 20) ? 'skenuoti lapai' : 'skenuotų lapų';
+    parts.push(`NLS: ${n} ${w}`);
+  }
+  const el = $('#online-status');
+  el.textContent = parts.join(' · ');
+  el.hidden = !parts.length;
+  // Links to explore further at this place and time.
+  const { lat, lng } = state.loc;
+  const s = state.stops[state.idx];
+  const y = s ? (s.kind === 'map' ? s.map.year : s.year) : 1850;
+  const oy = Math.max(1000, Math.min(2010, y > 0 ? y : 1000));
+  const la = lat.toFixed(4), lo = lng.toFixed(4);
+  const inGB = inBox([[49.1, -12.9], [61, 3]], lat, lng);
+  $('#more-maps').innerHTML = [
+    `<a href="https://www.oldmapsonline.org/en#position=12/${la}/${lo}&year=${oy}" target="_blank" rel="noopener">OldMapsOnline ↗</a>`,
+    `<a href="https://www.oldmapsonline.org/en/history/regions#position=6/${la}/${lo}&year=${y}" target="_blank" rel="noopener">Istoriniai regionai ↗</a>`,
+    `<a href="https://maps.nls.uk/geo/find/#zoom=15&lat=${lat.toFixed(5)}&lon=${lng.toFixed(5)}&layers=${inGB ? 102 : 99}&b=1&z=0&point=${lat.toFixed(5)},${lng.toFixed(5)}" target="_blank" rel="noopener">NLS paieška ↗</a>`,
+    `<a href="https://allmaps.org/" target="_blank" rel="noopener">Allmaps ↗</a>`,
+  ].join(' · ');
 }
 
 // Rebuild the timeline for the same place (a map became available), keeping the selected stop.
@@ -749,6 +861,7 @@ function setLocation(lat, lng, name, opts = {}) {
   if (!name) reverseGeocodeSoon(lat, lng);
   setStop(i);
   computeHistory();
+  startOnline();
 }
 
 // Nominatim allows at most one request per second.
@@ -847,6 +960,25 @@ document.addEventListener('pointerdown', (e) => { if (!e.target.closest('#loc'))
 
 // ---------- Timeline -------------------------------------------------------
 
+// 'Series: Ordnance Survey. One-inch to the mile, 2nd Edition (Outline) Surveyed: 1839 to 1840 Revised: 1898 Published: 1902'
+// -> { ed: '2nd Edition (Outline)', dates: 'matuota 1839–1840, patikslinta 1898, išleista 1902' }
+function sheetInfo(raw) {
+  const d = String(raw || '');
+  const KEYS = { Surveyed: 'matuota', Revised: 'patikslinta', Published: 'išleista', Printed: 'išspausdinta' };
+  const series = (d.match(/Series:\s*(.*?)(?=\s+(?:Surveyed|Revised|Published|Printed):|$)/i) || [])[1] || '';
+  const ed = series.replace(/^(Ordnance Survey|War Office)[.,]?\s*/i, '').replace(/^(Six|One)-inch to the mile,?\s*/i, '').replace(/\.$/, '').replace(/^\(([^)]*)\),?\s*/, '$1, ').replace(/,\s*$/, '').trim();
+  const parts = [];
+  for (const [k, lt] of Object.entries(KEYS)) {
+    const m = d.match(new RegExp(`${k}:\\s*((?:ca\\.\\s*)?\\d{4}(?:\\s*to\\s*\\d{4})?)`, 'i'));
+    if (m) parts.push(`${lt} ${m[1].replace(/ca\.\s*/i, 'apie ').replace(/\s*to\s*/, '–')}`);
+  }
+  // 'Published' and 'Printed' in the same year say the same thing twice
+  if (parts.length > 1 && /^išspausdinta/.test(parts[parts.length - 1]) && parts.some((x) => x.startsWith('išleista') && x.slice(-4) === parts[parts.length - 1].slice(-4))) parts.pop();
+  return { ed, dates: parts.join(', ') };
+}
+
+const whenM = (w) => (/(m|a)\.$|\)$/.test(String(w)) ? String(w) : `${w} m.`);
+
 function stopLabel(s) {
   if (s.kind === 'sat') return String(s.year);
   return fmtYearShort(s.year);
@@ -891,12 +1023,13 @@ function scheduleStop(i) {
 }
 
 function showStopHeader(s) {
-  const yearText = s.kind === 'sat' ? `${s.year} m.` : s.kind === 'map' ? `${s.map.when} m.` : fmtYear(s.year);
+  const yearText = s.kind === 'sat' ? `${s.year} m.` : s.kind === 'map' ? whenM(s.map.when) : fmtYear(s.year);
   $('#tl-year').textContent = yearText;
   $('#tl-year').classList.toggle('sat', s.kind === 'sat');
   $('#tl-era').textContent = era(s.year, s.kind);
   $('#tag-then').textContent = `Tada · ${s.kind === 'map' ? s.map.when : stopLabel(s)}`;
-  range.setAttribute('aria-valuetext', s.kind === 'sat' ? `${s.year} m., palydovo nuotrauka` : s.kind === 'map' ? `${s.map.when} m., ${s.map.t}` : fmtYear(s.year));
+  range.setAttribute('aria-valuetext', s.kind === 'sat' ? `${s.year} m., palydovo nuotrauka` : s.kind === 'map' ? `${whenM(s.map.when)}, ${s.map.t}` : fmtYear(s.year));
+  renderOnlineStatus();
 }
 
 let loadToken = 0;
@@ -1031,7 +1164,7 @@ function refreshHere() {
     html = `Palydovo nuotrauka <span class="orig">· ${esc(s.date)}</span>`;
     tip = `${s.year}: palydovo nuotrauka`;
   } else if (s.kind === 'map') {
-    html = `${esc(s.map.t)} <span class="orig">· ${esc(s.map.when)} m.</span>`;
+    html = `${esc(s.map.t)} <span class="orig">· ${esc(whenM(s.map.when))}${s.map.source === 'allmaps' ? ` · ${esc(s.map.region)}` : ''}</span>`;
     tip = `${s.map.when}: ${s.map.short || s.map.t}`;
   } else {
     const h = hereAt(s.year);
@@ -1103,6 +1236,7 @@ function renderHistory() {
   const complete = state.history.length === HIST_YEARS.length;
   if (complete) {
     if (f.maps) regionalFor(state.loc.lat, state.loc.lng).forEach((m) => rows.push({ kind: 'map', sort: m.year + 0.5, m }));
+    if (f.maps) state.online.sheets.slice(0, 40).forEach((sh) => rows.push({ kind: 'sheet', sort: sh.year + 0.6, sh }));
     if (f.events) eventsFor(state.loc.lat, state.loc.lng).forEach((e) => rows.push({ kind: 'event', sort: e.from + 0.3, e }));
     rows.sort((a, b) => a.sort - b.sort);
     const sat = state.wayback;
@@ -1123,7 +1257,14 @@ function renderHistory() {
     if (r.kind === 'map') {
       return `<li role="button" tabindex="0" class="map" data-key="map|${esc(r.m.id)}">
         <span class="dot" style="background:var(--then)"></span>
-        <span><div class="when">${esc(r.m.when)}</div><div class="what">${esc(r.m.t)}</div><div class="orig">Senasis žemėlapis · ${esc(r.m.region)}</div></span></li>`;
+        <span><div class="when">${esc(r.m.when)}</div><div class="what">${esc(r.m.t)}</div><div class="orig">${r.m.source === 'allmaps' ? 'Allmaps' : 'Senasis žemėlapis'} · ${esc(r.m.region)}${r.m.link ? ` · <a href="${esc(r.m.link)}" target="_blank" rel="noopener">šaltinis ↗</a>` : ''}</div></span></li>`;
+    }
+    if (r.kind === 'sheet') {
+      const sh = r.sh;
+      const info = sheetInfo(sh.dates);
+      return `<li role="button" tabindex="0" class="sheet" data-key="sheet|${esc(sh.image)}">
+        <span class="dot sheet"></span>
+        <span><div class="when">${sh.year}</div><div class="what">${esc(sh.sheet || 'Lapas')}</div><div class="orig">${[NLS_SERIES[sh.type] || 'NLS', info.ed, info.dates].filter(Boolean).map(esc).join(' · ')} · <a href="https://maps.nls.uk/view/${esc(sh.image)}" target="_blank" rel="noopener">NLS skenas ↗</a></div></span></li>`;
     }
     if (r.kind === 'sat') {
       return `<li role="button" tabindex="0" data-key="sat">
@@ -1141,6 +1282,11 @@ function renderHistory() {
   list.querySelectorAll('li').forEach((li) => {
     const go = (ev) => {
       const [kind, id] = li.dataset.key.split('|');
+      if (kind === 'sheet') {
+        if (!(ev && ev.target.closest('a'))) li.querySelector('a').click();
+        return;
+      }
+      if (ev && ev.target.closest('a')) return;
       if (kind === 'ev') {
         if (ev && ev.target.closest('a')) return; // the Wikipedia link opens by itself
         const e = EVENTS[+id];
@@ -1174,7 +1320,8 @@ function markHistoryCurrent() {
   $$('#hist-list li').forEach((li) => {
     const [kind, id] = li.dataset.key.split('|');
     let on = false;
-    if (kind === 'ev') { const e = EVENTS[+id]; const y = s.kind === 'map' ? s.map.year : s.year; on = !!e && e.from <= y && e.to >= y && s.kind !== 'sat'; }
+    if (kind === 'sheet') on = false;
+    else if (kind === 'ev') { const e = EVENTS[+id]; const y = s.kind === 'map' ? s.map.year : s.year; on = !!e && e.from <= y && e.to >= y && s.kind !== 'sat'; }
     else if (kind === 'sat') on = s.kind === 'sat';
     else if (kind === 'map') on = s.kind === 'map' && s.map.id === id;
     else on = s.kind === 'hist' && s.year >= +li.dataset.year && s.year <= +li.dataset.to;
@@ -1220,6 +1367,7 @@ function renderFamousList() {
 }
 
 function imgUrl(f) {
+  if (f.image) return f.image;
   if (f.img) return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(f.img)}?width=800`;
   if (f.noThumb) return null;
   return f.w ? wikiThumbs[f.w] : null;
@@ -1277,7 +1425,10 @@ function setCardImage(box, f) {
   box.innerHTML = `<img src="${esc(src)}" alt="${esc(f.t)}" loading="lazy">`;
   box.firstChild.addEventListener('error', () => { box.innerHTML = '<div class="noimg">Paveikslo įkelti nepavyko.</div>'; });
   const name = imgFile(f);
-  if (credit && name) {
+  if (credit && f.credit) {
+    credit.hidden = false;
+    credit.innerHTML = f.credit; // written in this file, not taken from the web
+  } else if (credit && name) {
     credit.hidden = false;
     credit.innerHTML = creditHtml(name, credits[name]);
     loadCredit(name).then((c) => { if (FAMOUS[state.famousSel] === f) credit.innerHTML = creditHtml(name, c); });
@@ -1301,6 +1452,7 @@ function selectFamous(i, opts = {}) {
       <div class="links">
         <a href="#" id="fam-go">Rodyti to meto sienas</a>
         ${wikiLink(f)}
+        ${(f.links || []).map((l) => `<a href="${esc(l.href)}" target="_blank" rel="noopener">${esc(l.label)}</a>`).join('')}
       </div>
     </div>`;
   setCardImage(card.querySelector('.img'), f);
@@ -1455,5 +1607,6 @@ $('#base-select').addEventListener('change', (e) => {
   setMode(store.get('tm.mode') || 'compare');
   setStop(nearestStop(START_YEAR, (s) => s.kind === 'hist'));
   computeHistory();
+  startOnline();
   loadWikiThumbs();
 })();
