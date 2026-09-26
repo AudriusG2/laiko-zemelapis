@@ -179,11 +179,11 @@ const FAMOUS = [
   { y: 2004, when: '2004 m.', t: 'OpenStreetMap', ll: [51.52, -0.1], d: 'Laisvas pasaulio žemėlapis, kurį kuria milijonai savanorių. Šios programėlės gatvių sluoksnis taip pat iš jo.', w: 'OpenStreetMap', img: 'OpenStreetMap homepage.png' },
   { y: 2005, when: '2005 m.', t: 'Google Maps ir Google Earth', ll: [37.422, -122.084], d: 'Interaktyvūs žemėlapiai ir palydovų nuotraukos tapo prieinami kiekvienam naršyklėje, o vėliau ir telefone.', w: 'Google Maps', noThumb: true },
   { y: 1030, when: '~1020–1050 m. (kopija ~1190–1210 m.)', t: '„Įdomybių knygos“ pasaulio žemėlapis', ll: [30.05, 31.24], d: 'Anoniminis Fatimidų Egipto traktatas apie dangų ir Žemę, sudarytas apie 1020–1050 m. Jame yra du pasaulio žemėlapiai – apskritas ir stačiakampis. Stačiakampis – vienas pirmųjų žinomų pasaulio žemėlapių su grafiniu masteliu. Nepilną XII a. pabaigos–XIII a. pradžios kopiją 2002 m. įsigijo Bodlio biblioteka Oksforde. Paveiksle – stačiakampis pasaulio žemėlapis.', w: 'Book of Curiosities', img: 'Book-of-Curiosities-Bodleian.jpg', links: [{ href: 'https://digital.bodleian.ox.ac.uk/objects/748a9d50-5a3a-440e-ab9d-567dd68b6abb/', label: 'Bodlio biblioteka ↗' }] },
-  { y: 1920, when: '1920–1921 m.', t: 'National Geographic Europos žemėlapis po Paryžiaus taikos konferencijos', ll: [38.9053, -77.0381], d: 'Didelį Europos žemėlapį su naujomis, Paryžiaus taikos konferencijoje nustatytomis sienomis National Geographic draugijai parengė Bafalo įmonė Matthews-Northrup. Jis datuotas 1920 m., o išleistas kaip žurnalo „National Geographic Magazine“ 1921 m. vasario numerio priedas. Raudonos linijos žymi galutinai nustatytas ir dar nenuspręstas (punktyru) sienas, plebiscitų teritorijas ir tarptautines zonas, geltonos – sienas prieš Pirmąjį pasaulinį karą. Lietuva jau pažymėta kaip atskira valstybė, bet jos sienos dar nenuspręstos, Klaipėdos kraštas paliktas sąjungininkų valdžiai, o visa Airija vis dar priklauso Jungtinei Karalystei.', w: 'Paris Peace Conference (1919–1920)', img: 'Map of Europe showing countries as established by the Peace Conference at Paris (14773864899).jpg', credit: 'National Geographic Society, 1920 (išl. 1921 m. vasarį); skenas: <a href="https://commons.wikimedia.org/wiki/File:Map_of_Europe_showing_countries_as_established_by_the_Peace_Conference_at_Paris_(14773864899).jpg" target="_blank" rel="noopener">Norman B. Leventhal Map Center</a>, Bostono viešoji biblioteka (CC BY 2.0)' },
+  { y: 1920, when: '1920–1921 m.', t: 'National Geographic Europos žemėlapis po Paryžiaus taikos konferencijos', ll: [38.9053, -77.0381], d: 'Didelį Europos žemėlapį su naujomis, Paryžiaus taikos konferencijoje nustatytomis sienomis National Geographic draugijai parengė Bafalo įmonė Matthews-Northrup. Jis datuotas 1920 m., o išleistas kaip žurnalo „National Geographic Magazine“ 1921 m. vasario numerio priedas. Raudonos linijos žymi galutinai nustatytas ir dar nenuspręstas (punktyru) sienas, plebiscitų teritorijas ir tarptautines zonas, geltonos – sienas prieš Pirmąjį pasaulinį karą. Lietuva jau pažymėta kaip atskira valstybė, bet jos sienos dar nenuspręstos, Klaipėdos kraštas paliktas sąjungininkų valdžiai, o visa Airija vis dar priklauso Jungtinei Karalystei.', w: 'Paris Peace Conference (1919–1920)', img: 'Map of Europe showing countries as established by the Peace Conference at Paris (14773864899).jpg', credit: 'National Geographic Society, 1920 (išl. 1921 m. vasarį); skenas: Norman B. Leventhal Map Center, Bostono viešoji biblioteka · <a href="https://creativecommons.org/licenses/by/2.0/deed.lt" target="_blank" rel="noopener">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Map_of_Europe_showing_countries_as_established_by_the_Peace_Conference_at_Paris_(14773864899).jpg" target="_blank" rel="noopener">Wikimedia Commons</a>' },
   { y: 2010, when: '2010 m. duomenys', t: 'Lietuva pagal gyventojų skaičių (kartograma)', ll: [55.17, 23.88], d: 'Worldmapper tinklelio kartograma: kiekvienas žemėlapio langelis padidintas arba sumažintas pagal jame gyvenančių žmonių skaičių. Todėl Vilnius, Kaunas ir Klaipėda išsipučia, o retai gyvenamos vietovės susitraukia.', w: 'Cartogram', image: 'https://worldmapper.org/wp-content/uploads/2018/05/Grid_WPA_ltu_2010.png', credit: 'Kartograma: <a href="https://worldmapper.org/maps/gridded-population-ltu/" target="_blank" rel="noopener">Worldmapper</a> (B. Hennig) · <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.lt" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a>' },
   { y: 2010, when: '2010 m. duomenys', t: 'Jungtinė Karalystė pagal gyventojų skaičių (kartograma)', ll: [54.0, -2.5], d: 'Worldmapper tinklelio kartograma, kurioje plotas proporcingas gyventojų skaičiui. Ji apima ir Šiaurės Airiją: matyti, kaip išsipučia Belfastas, o kaimiškos vietovės susitraukia.', w: 'Cartogram', image: 'https://worldmapper.org/wp-content/uploads/2013/10/gbr-768x811.png', credit: 'Kartograma: <a href="https://worldmapper.org/maps/gridded-population-gbr/" target="_blank" rel="noopener">Worldmapper</a> (B. Hennig) · <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.lt" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a>' },
   { y: 2010, when: '2010 m. duomenys', t: 'Airija pagal gyventojų skaičių (kartograma)', ll: [53.0, -7.9], d: 'Worldmapper tinklelio kartograma, kurioje plotas proporcingas gyventojų skaičiui. Ji apima tik Airijos Respubliką: Šiaurės Airija pilka ir parodyta Jungtinės Karalystės kartogramoje.', w: 'Cartogram', image: 'https://worldmapper.org/wp-content/uploads/2018/04/Grid_WPA_irl_2010.png', credit: 'Kartograma: <a href="https://worldmapper.org/maps/gridded-population-irl/" target="_blank" rel="noopener">Worldmapper</a> (B. Hennig) · <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.lt" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a>' },
-  { y: 2017, when: '1990–2017 m.', t: 'Emigracija iš Lietuvos (kartograma)', ll: [54.687, 25.28], d: 'Pasaulio šalys padidintos pagal tai, kiek jose gyvena iš Lietuvos atvykusių žmonių (JT duomenys, 1990–2017 m.). Didžiausia – Jungtinė Karalystė, šalia jos Airija, ryški ir Rusija.', w: 'Cartogram', image: 'https://worldmapper.org/wp-content/uploads/2019/06/Migrants_Origin_Lithuania_1990to2017-1200x600.png', credit: 'Kartograma: <a href="https://worldmapper.org/maps/migration-from-lithuania-1990-2017/" target="_blank" rel="noopener">Worldmapper</a> · duomenys: JT DESA (2017) · <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.lt" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a>' },
+  { y: 2017, when: '1990–2017 m.', t: 'Emigracija iš Lietuvos (kartograma)', ll: [54.687, 25.28], d: 'Pasaulio šalys padidintos pagal tai, kiek jose gyvena iš Lietuvos atvykusių žmonių (JT duomenys, 1990–2017 m.). Didžiausia – Jungtinė Karalystė, po jos Rusija ir Lenkija; ryški ir Airija.', w: 'Cartogram', image: 'https://worldmapper.org/wp-content/uploads/2019/06/Migrants_Origin_Lithuania_1990to2017-1200x600.png', credit: 'Kartograma: <a href="https://worldmapper.org/maps/migration-from-lithuania-1990-2017/" target="_blank" rel="noopener">Worldmapper</a> · duomenys: JT DESA (2017) · <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.lt" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a>' },
 ];
 
 FAMOUS.push(...(window.EXTRA_FAMOUS || []));
@@ -442,7 +442,7 @@ const state = {
   history: [],
   famousSel: -1,
   openEvents: new Set(),
-  online: { key: '', allmaps: [], allmapsBusy: false, sheets: [], sheetsBusy: false },
+  online: { key: '', allmaps: [], allmapsBusy: false, allmapsError: false, sheets: [], sheetsTotal: 0, sheetsBusy: false },
   filters: { hist: true, maps: true, events: true, ...(store.get('tm.filters') || {}) },
 };
 
@@ -463,21 +463,32 @@ function inCountry(name, lat, lng) {
   return !!(h && h.e.name === name);
 }
 
-// Patchy services (e.g. the 1944 aerial photos): ask the server for a 4x4 image at the place.
+// Patchy services (e.g. the 1944 aerial photos) and maps that fill only part of their rectangle:
+// look at the pixel under the place (ArcGIS: a 4x4 export; tiles: the one tile at the map's zoom).
 // The first call answers "no"; when the server says yes, the timeline is rebuilt.
 const probeCache = new Map();
 function probeOk(r, lat, lng) {
   const k = `${r.id}|${lat.toFixed(3)},${lng.toFixed(3)}`;
   if (probeCache.has(k)) return probeCache.get(k) === true;
   probeCache.set(k, null);
-  const p = L.CRS.EPSG3857.project(L.latLng(lat, lng)), d = 20;
-  fetch(`${r.url}/export?bbox=${p.x - d},${p.y - d},${p.x + d},${p.y + d}&bboxSR=3857&imageSR=3857&size=4,4&format=png&transparent=true&f=image`)
-    .then((res) => res.blob()).then(createImageBitmap).then((bmp) => {
+  let url, px = 2, py = 2;
+  if (r.kind === 'xyz') {
+    const z = Math.min(r.zoom, r.maxZoom), n = 2 ** z, sn = Math.sin((lat * Math.PI) / 180);
+    const fx = ((lng + 180) / 360) * n, fy = (0.5 - Math.log((1 + sn) / (1 - sn)) / (4 * Math.PI)) * n;
+    const x = Math.floor(fx), y = Math.floor(fy);
+    url = r.url.replace('{z}', z).replace('{x}', x).replace('{y}', y);
+    px = Math.floor((fx - x) * 256); py = Math.floor((fy - y) * 256);
+  } else {
+    const p = L.CRS.EPSG3857.project(L.latLng(lat, lng)), d = 20;
+    url = `${r.url}/export?bbox=${p.x - d},${p.y - d},${p.x + d},${p.y + d}&bboxSR=3857&imageSR=3857&size=4,4&format=png&transparent=true&f=image`;
+  }
+  fetch(url)
+    .then((res) => { if (!res.ok) throw new Error(res.status); return res.blob(); }).then(createImageBitmap).then((bmp) => {
       const c = document.createElement('canvas');
-      c.width = c.height = 4;
+      c.width = bmp.width; c.height = bmp.height;
       const g = c.getContext('2d');
       g.drawImage(bmp, 0, 0);
-      const ok = g.getImageData(2, 2, 1, 1).data[3] > 0;
+      const ok = g.getImageData(Math.min(px, bmp.width - 1), Math.min(py, bmp.height - 1), 1, 1).data[3] > 0;
       probeCache.set(k, ok);
       if (ok && state.loc.lat.toFixed(3) === lat.toFixed(3) && state.loc.lng.toFixed(3) === lng.toFixed(3)) refreshStops();
     })
@@ -513,23 +524,30 @@ function scheduleRefreshStops() {
   clearTimeout(refreshTimer);
   refreshTimer = setTimeout(refreshStops, 400);
 }
+let onlineGen = 0, onlineCtl = null;
 function startOnline() {
   const { lat, lng } = state.loc;
   const key = placeKey(lat, lng);
-  state.online = { key, allmaps: [], allmapsBusy: !!window.AllmapsFinder, sheets: [], sheetsBusy: false };
+  const gen = ++onlineGen;
+  if (onlineCtl) onlineCtl.abort(); // the previous place's search stops taking new candidates
+  onlineCtl = new AbortController();
+  state.online = { key, allmaps: [], allmapsBusy: !!window.AllmapsFinder, allmapsError: false, sheets: [], sheetsTotal: 0, sheetsBusy: false };
   renderOnlineStatus();
+  renderHistory();
   if (window.AllmapsFinder) {
     AllmapsFinder.find(lat, lng, (e) => {
-      if (state.online.key !== key || state.online.allmaps.some((x) => x.id === e.id)) return;
+      if (gen !== onlineGen || state.online.allmaps.some((x) => x.id === e.id)) return;
       state.online.allmaps.push(e);
       scheduleRefreshStops();
+    }, onlineCtl.signal).catch(() => {
+      if (gen === onlineGen) state.online.allmapsError = true;
     }).finally(() => {
-      if (state.online.key !== key) return;
+      if (gen !== onlineGen) return;
       state.online.allmapsBusy = false;
       renderOnlineStatus();
     });
   }
-  loadNlsSheets(lat, lng, key);
+  loadNlsSheets(lat, lng, key, gen);
 }
 
 // NLS map finder index: every scanned sheet under the point (Great Britain and Ireland).
@@ -539,11 +557,40 @@ const NLS_SERIES = {
   os_half_inch: 'OS ½ colio', bart_half_combined: 'Bartholomew ½ colio', towns: 'Miestų planai',
   International_Map_of_the_World: 'Tarptautinis pasaulio žemėlapis', German_naval_charts: 'Vokiečių jūrlapiai',
 };
-async function loadNlsSheets(lat, lng, key) {
-  if (!inBox([[49.1, -12.9], [61, 3]], lat, lng)) return;
+const NLS_BOX = [[49.1, -12.9], [61, 1.8]];
+const NLS_PER_SERIES = 4;
+// A city centre has hundreds of sheets (Edinburgh: 705, most of them early town views): list a few
+// of each series, spread over its years; the rest are one click away in the NLS finder.
+function nlsPick(rows) {
+  const byType = {};
+  rows.forEach((sh) => (byType[sh.type] = byType[sh.type] || []).push(sh));
+  const picked = [];
+  Object.values(byType).forEach((list) => {
+    const k = Math.min(NLS_PER_SERIES, list.length);
+    for (let i = 0; i < k; i++) picked.push(list[Math.floor((i * list.length) / k)]);
+  });
+  return picked.sort((a, b) => a.year - b.year);
+}
+// One capped cache object (25 places, only the listed rows), not a key per place.
+const NLS_CACHE = 'tm.nls.v1';
+try { Object.keys(localStorage).filter((k) => k.startsWith('tm.nls.') && k !== NLS_CACHE).forEach((k) => localStorage.removeItem(k)); } catch { /* no storage */ }
+function nlsCacheGet(key) {
+  const e = (store.get(NLS_CACHE) || {})[key];
+  return e && Date.now() - e.t < 7 * 864e5 ? e : null;
+}
+function nlsCacheSet(key, rows, total) {
+  const c = store.get(NLS_CACHE) || {};
+  c[key] = { t: Date.now(), n: total, v: rows };
+  const keys = Object.keys(c).sort((a, b) => c[a].t - c[b].t);
+  while (keys.length > 25) delete c[keys.shift()];
+  store.set(NLS_CACHE, c);
+}
+async function loadNlsSheets(lat, lng, key, gen) {
+  if (!inBox(NLS_BOX, lat, lng)) return;
   const types = Object.keys(NLS_SERIES);
-  const cached = store.get('tm.nls.' + key);
-  let rows = cached && Date.now() - cached.t < 7 * 864e5 ? cached.v : null;
+  const cached = nlsCacheGet(key);
+  let rows = cached ? cached.v : null;
+  let total = cached ? cached.n : 0;
   if (!rows) {
     state.online.sheetsBusy = true;
     renderOnlineStatus();
@@ -553,26 +600,39 @@ async function loadNlsSheets(lat, lng, key) {
       propertyName: types.map(() => '(IMAGE,SHEET,DATES,YEAR)').join(''),
       CQL_FILTER: types.map(() => `INTERSECTS(the_geom,SRID=4326;POINT(${lng} ${lat}))`).join(';'),
     });
+    const ctl = new AbortController();
+    const timer = setTimeout(() => ctl.abort(), 15000);
     try {
-      const r = await fetch(url);
-      const j = r.ok ? await r.json() : null;
-      rows = (j && j.features ? j.features : []).map((f) => {
+      let j;
+      try {
+        const r = await fetch(url, { signal: ctl.signal });
+        if (!r.ok) throw new Error('NLS HTTP ' + r.status);
+        j = await r.json();
+      } finally { clearTimeout(timer); }
+      if (!j || !Array.isArray(j.features)) throw new Error('NLS: bad response');
+      const text = (v) => String(v == null ? '' : v).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+      const all = j.features.map((f) => {
         const p = f.properties || {};
         const type = String(f.id || '').split('.')[0];
-        const text = (v) => String(v == null ? '' : v).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
         return { type, image: String(p.IMAGE || ''), sheet: text(p.SHEET), dates: text(p.DATES), year: parseInt(p.YEAR, 10) };
       }).filter((x) => x.image && /^\d+$/.test(x.image) && x.year > 1500 && !/in copyright/i.test(x.dates));
       const seen = new Set();
-      rows = rows.filter((x) => (seen.has(x.image) ? false : seen.add(x.image))).sort((a, b) => a.year - b.year);
-      store.set('tm.nls.' + key, { t: Date.now(), v: rows });
-    } catch { rows = []; }
+      const uniq = all.filter((x) => (seen.has(x.image) ? false : seen.add(x.image))).sort((a, b) => a.year - b.year);
+      rows = nlsPick(uniq);
+      total = uniq.length;
+      nlsCacheSet(key, rows, total); // only a good answer is cached; a failure is tried again next time
+    } catch { rows = []; total = 0; }
   }
-  if (state.online.key !== key) return;
+  if (gen !== onlineGen) return;
   state.online.sheets = rows || [];
+  state.online.sheetsTotal = total || state.online.sheets.length;
   state.online.sheetsBusy = false;
   renderOnlineStatus();
   renderHistory();
 }
+
+const nlsFindUrl = (lat, lng) => `https://maps.nls.uk/geo/find/#zoom=15&lat=${lat.toFixed(5)}&lon=${lng.toFixed(5)}&layers=102&b=1&z=0&point=${lat.toFixed(5)},${lng.toFixed(5)}`;
+const ltCount = (n, one, few, many) => (n % 10 === 1 && n % 100 !== 11 ? one : n % 10 >= 2 && (n % 100 < 10 || n % 100 > 20) ? few : many);
 
 function renderOnlineStatus() {
   const o = state.online;
@@ -581,29 +641,34 @@ function renderOnlineStatus() {
   else if (o.allmaps.length) {
     const shown = o.allmaps.filter((r) => IS_LOCAL || r.license === 'open').length;
     parts.push(`Allmaps: rasta ${o.allmaps.length}${shown !== o.allmaps.length ? `, svetainėje rodoma ${shown} (kiti – tik kompiuteryje)` : ''}`);
-  } else if (o.key) parts.push('Allmaps: čia georeferencijuotų žemėlapių dar nėra');
+  } else if (o.allmapsError) parts.push('Allmaps: paieška nepavyko, pabandyk vėliau');
+  else if (o.key && window.AllmapsFinder) parts.push('Allmaps: išsamesnių senų žemėlapių čia nerasta');
   if (o.sheetsBusy) parts.push('NLS: ieškoma skenuotų lapų…');
   else if (o.sheets.length) {
-    const n = o.sheets.length;
-    const w = n % 10 === 1 && n % 100 !== 11 ? 'skenuotas lapas' : n % 10 >= 2 && (n % 100 < 10 || n % 100 > 20) ? 'skenuoti lapai' : 'skenuotų lapų';
-    parts.push(`NLS: ${n} ${w}`);
+    const n = o.sheetsTotal || o.sheets.length;
+    const shownN = o.sheets.length;
+    parts.push(`NLS: ${n} ${ltCount(n, 'skenuotas lapas', 'skenuoti lapai', 'skenuotų lapų')}${shownN < n ? ` (sąraše ${shownN}, visi – „NLS paieška“)` : ''}`);
   }
   const el = $('#online-status');
   el.textContent = parts.join(' · ');
   el.hidden = !parts.length;
-  // Links to explore further at this place and time.
+  // Links to explore further at this place and time. Only the hrefs change, so a focused link stays.
   const { lat, lng } = state.loc;
   const s = state.stops[state.idx];
   const y = s ? (s.kind === 'map' ? s.map.year : s.year) : 1850;
   const oy = Math.max(1000, Math.min(2010, y > 0 ? y : 1000));
   const la = lat.toFixed(4), lo = lng.toFixed(4);
-  const inGB = inBox([[49.1, -12.9], [61, 3]], lat, lng);
-  $('#more-maps').innerHTML = [
-    `<a href="https://www.oldmapsonline.org/en#position=12/${la}/${lo}&year=${oy}" target="_blank" rel="noopener">OldMapsOnline ↗</a>`,
-    `<a href="https://www.oldmapsonline.org/en/history/regions#position=6/${la}/${lo}&year=${y}" target="_blank" rel="noopener">Istoriniai regionai ↗</a>`,
-    `<a href="https://maps.nls.uk/geo/find/#zoom=15&lat=${lat.toFixed(5)}&lon=${lng.toFixed(5)}&layers=${inGB ? 102 : 99}&b=1&z=0&point=${lat.toFixed(5)},${lng.toFixed(5)}" target="_blank" rel="noopener">NLS paieška ↗</a>`,
-    `<a href="https://allmaps.org/" target="_blank" rel="noopener">Allmaps ↗</a>`,
-  ].join(' · ');
+  const links = [
+    ['OldMapsOnline ↗', `https://www.oldmapsonline.org/en#position=12/${la}/${lo}&year=${oy}`],
+    ['Istoriniai regionai ↗', `https://www.oldmapsonline.org/en/history/regions#position=6/${la}/${lo}&year=${y}`],
+  ];
+  if (inBox(NLS_BOX, lat, lng)) links.push(['NLS paieška ↗', nlsFindUrl(lat, lng)]); // the NLS finder covers Great Britain and Ireland
+  links.push(['Allmaps ↗', 'https://allmaps.org/']);
+  const box = $('#more-maps');
+  if ([...box.children].map((a) => a.textContent).join('|') !== links.map((l) => l[0]).join('|')) {
+    box.innerHTML = links.map((l) => `<a target="_blank" rel="noopener">${l[0]}</a>`).join(' · ');
+  }
+  [...box.children].forEach((a, i) => { if (a.getAttribute('href') !== links[i][1]) a.setAttribute('href', links[i][1]); });
 }
 
 // Rebuild the timeline for the same place (a map became available), keeping the selected stop.
@@ -966,7 +1031,7 @@ function sheetInfo(raw) {
   const d = String(raw || '');
   const KEYS = { Surveyed: 'matuota', Revised: 'patikslinta', Published: 'išleista', Printed: 'išspausdinta' };
   const series = (d.match(/Series:\s*(.*?)(?=\s+(?:Surveyed|Revised|Published|Printed):|$)/i) || [])[1] || '';
-  const ed = series.replace(/^(Ordnance Survey|War Office)[.,]?\s*/i, '').replace(/^(Six|One)-inch to the mile,?\s*/i, '').replace(/\.$/, '').replace(/^\(([^)]*)\),?\s*/, '$1, ').replace(/,\s*$/, '').trim();
+  const ed = series.replace(/^(Ordnance Survey|War Office)[.,]?\s*/i, '').replace(/^(?:Six|One|Quarter|Half)[- ]inch to the mile,?\s*/i, '').replace(/\.$/, '').replace(/^\(([^)]*)\),?\s*/, '$1, ').replace(/,\s*$/, '').trim();
   const parts = [];
   for (const [k, lt] of Object.entries(KEYS)) {
     const m = d.match(new RegExp(`${k}:\\s*((?:ca\\.\\s*)?\\d{4}(?:\\s*to\\s*\\d{4})?)`, 'i'));
@@ -1019,7 +1084,7 @@ function scheduleStop(i) {
   range.value = i;
   showStopHeader(state.stops[i]);
   clearTimeout(stopTimer);
-  stopTimer = setTimeout(() => { stopTimer = 0; setStop(i); }, 160);
+  stopTimer = setTimeout(() => { stopTimer = 0; setStop(state.idx); }, 160); // state.idx follows the stop if refreshStops moves it
 }
 
 function showStopHeader(s) {
@@ -1236,7 +1301,11 @@ function renderHistory() {
   const complete = state.history.length === HIST_YEARS.length;
   if (complete) {
     if (f.maps) regionalFor(state.loc.lat, state.loc.lng).forEach((m) => rows.push({ kind: 'map', sort: m.year + 0.5, m }));
-    if (f.maps) state.online.sheets.slice(0, 40).forEach((sh) => rows.push({ kind: 'sheet', sort: sh.year + 0.6, sh }));
+    const o = state.online;
+    if (f.maps && o.key === placeKey(state.loc.lat, state.loc.lng)) {
+      o.sheets.forEach((sh) => rows.push({ kind: 'sheet', sort: sh.year + 0.6, sh }));
+      if (o.sheetsTotal > o.sheets.length) rows.push({ kind: 'sheet-more', sort: Infinity, n: o.sheetsTotal - o.sheets.length });
+    }
     if (f.events) eventsFor(state.loc.lat, state.loc.lng).forEach((e) => rows.push({ kind: 'event', sort: e.from + 0.3, e }));
     rows.sort((a, b) => a.sort - b.sort);
     const sat = state.wayback;
@@ -1265,6 +1334,11 @@ function renderHistory() {
       return `<li role="button" tabindex="0" class="sheet" data-key="sheet|${esc(sh.image)}">
         <span class="dot sheet"></span>
         <span><div class="when">${sh.year}</div><div class="what">${esc(sh.sheet || 'Lapas')}</div><div class="orig">${[NLS_SERIES[sh.type] || 'NLS', info.ed, info.dates].filter(Boolean).map(esc).join(' · ')} · <a href="https://maps.nls.uk/view/${esc(sh.image)}" target="_blank" rel="noopener">NLS skenas ↗</a></div></span></li>`;
+    }
+    if (r.kind === 'sheet-more') {
+      return `<li role="button" tabindex="0" class="sheet" data-key="sheet|more">
+        <span class="dot sheet"></span>
+        <span><div class="what">Ir dar ${r.n} ${ltCount(r.n, 'NLS lapas', 'NLS lapai', 'NLS lapų')}</div><div class="orig"><a href="${esc(nlsFindUrl(state.loc.lat, state.loc.lng))}" target="_blank" rel="noopener">Visi – NLS paieškoje ↗</a></div></span></li>`;
     }
     if (r.kind === 'sat') {
       return `<li role="button" tabindex="0" data-key="sat">

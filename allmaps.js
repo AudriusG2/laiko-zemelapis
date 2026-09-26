@@ -38,7 +38,8 @@
   function clean(s) {
     return String(s)
       .replace(/<[^>]+>/g, ' ')
-      .replace(/&nbsp;|&#160;/g, ' ').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;|&apos;/g, "'")
+      .replace(/&#(\d+);|&#x([0-9a-f]+);/gi, (x, d, h) => { const n = d ? +d : parseInt(h, 16); return n > 0 && n <= 0x10FFFF ? String.fromCodePoint(n) : ' '; })
+      .replace(/&nbsp;/g, ' ').replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&amp;/g, '&')
       .replace(/[\u2010-\u2015\u2212]/g, '-')
       .replace(/\s+/g, ' ').trim();
   }
@@ -91,7 +92,13 @@
     // lists "1600 - 1699; 1660 - 1669; 1661" -> narrowest
     if (/;/.test(s)) {
       const parts = s.split(';').map(p => parseYear(p, prefer)).filter(Boolean);
-      if (parts.length) return parts.sort((a, b) => (a.end - a.start) - (b.end - b.start) || (prefer === 'last' ? -1 : 1))[0];
+      if (parts.length) {
+        // narrowest; on a tie the first or the last one, as asked
+        const w = (r) => r.end - r.start;
+        let best = parts[0];
+        for (const r of parts) if (w(r) < w(best) || (prefer === 'last' && w(r) === w(best))) best = r;
+        return best;
+      }
     }
     const cands = [];
     let re;
@@ -136,6 +143,7 @@
 
   const VALUE_DENY = /digiti[sz]|scanned|scan date|captured|date added|online since|record created/i;
   const LOW_LABEL = /^(date issued|issued)$/; // Leiden etc. use it for the digital edition
+  const SHELF_LABEL = /^(shelfmark|shelf mark|signatur|signature|call number|plaatsnummer|plaatskenmerk|cote)$/i;
   function extractYear(ctx) {
     // ctx: { manifest, canvas, pairs, labels:[strings], nls }
     const T = []; // tiers, highest first
@@ -153,10 +161,14 @@
     // parent (atlas) record: its date is often the digital edition -> ignore implausibly recent values
     par.filter(p => isDate(p) || isImp(p)).forEach(p => p.values.forEach(v => push('parent:' + p.label, v, isImp(p) ? 'last' : 'first', 1990)));
     for (const t of ctx.labels || []) push('label', t, 'last');
+    // a shelfmark ("BPL 1823.") repeated in a note or label is not a year: cut it out first
+    const shelf = pairs.filter(p => SHELF_LABEL.test(p.label)).flatMap(p => p.values)
+      .map(v => v.replace(/[.\s]+$/, '')).filter(v => /\d/.test(v) && /[A-Za-z]/.test(v));
+    const noShelf = (x) => shelf.reduce((acc, v) => acc.split(v).join(' '), clean(x));
     const found = [];
     for (const t of T) {
       if (VALUE_DENY.test(t.text)) continue;
-      const r = parseYear(t.text, t.prefer);
+      const r = parseYear(noShelf(t.text), t.prefer);
       if (!r || (t.maxYear && r.start >= t.maxYear)) continue;
       found.push(Object.assign(r, { src: t.src, text: clean(t.text).slice(0, 120) }));
     }
@@ -217,6 +229,11 @@
       if (t.length < 25 && context && c.src !== 'parent.label') t = t + ' · ' + cleanTitle(context, 50);
       if (t.length >= 3) return { title: t, src: c.src };
     }
+    // Only a bare "Sheet 1." is left: with the atlas title it still names the sheet.
+    const pub = ((ctx.pairs || []).find(p => /^pub title$/i.test(p.label)) || {}).values;
+    const atlas = ctx.parentLabel || (pub && pub[0]);
+    const bare = atlas && cands.map(c => clean(c.t || '')).find(t => /^(sheet|blad|plate|pl\.?|carte|karte|kaart|blatt)\s*[\dA-Z.]+$/i.test(t));
+    if (bare) return { title: cleanTitle(bare) + ' · ' + cleanTitle(atlas, 60), src: 'sheet+atlas' };
     return null;
   }
 
@@ -248,27 +265,36 @@
     return { url: 'https://viewer.allmaps.org/?url=' + encodeURIComponent('https://annotations.allmaps.org/maps/' + mapId), src: 'allmaps-viewer' };
   }
   const OPEN_RIGHTS = /\bCC-?BY\b(?![- ]?N)|publicdomain|\/zero\/|licenses\/by(-sa)?\/|rightsstatements\.org\/vocab\/(NoC|NKC)|no known (copyright|restrictions)|public domain|free of known restrictions|domaine public|allemenning|creativecommons\.org\/publicdomain/i;
-  const NC_RIGHTS = /-nc|noncommercial|non-commercial|InC|all rights reserved|conditions-dutilisation/i;
   // The public site is non-commercial and credits every scan, so CC BY-NC(-SA) is fine; ND (no derivatives) is not, since the scan is warped.
   const CC_NC = /creativecommons\.org\/licenses\/by-nc(-sa)?\/|Attribution[- ]Non-?commercial|\bCC[- ]?BY[- ]NC\b/i;
   const NO_DERIV = /-nd\b|NoDeriv|No Derivative/i;
+  const IN_COPYRIGHT = /\bInC\b/; // rightsstatements.org/vocab/InC…; case-sensitive, so 'including' and 'Inc.' do not match
+  // NLS view pages show only a short tag such as 'CC-BY (DAMP).'; maps.nls.uk/copyright.html lists the partner
+  // collections that need their permission (BL/Roy, DAMP, Hutton, East Lothian, Saltoun, Sutherland…). Only these are free:
+  const NLS_OPEN_TAGS = /^(NLS|OS|Signet|CCS|LUS|2nd LUS|Lovat|Renfrewshire Museums|Scottish Borders Archives|Tavistock|West Highland Museum|Yale)$/i;
   function extractRights(ctx) {
     const man = ctx.manifest || {};
-    // Rumsey manifests carry no licence; the collection states CC BY-NC-SA 3.0 for all its images.
+    // Rumsey manifests carry no licence. The collection licenses its images CC BY-NC-SA 3.0, but says that
+    // "maps and images originally published after 1929 may still be under copyright".
     const rid = (ctx.map && ctx.map.resource && ctx.map.resource.id) || '';
-    if (/davidrumsey\.com\//.test(rid)) return { license: 'open', text: 'David Rumsey Map Collection, CC BY-NC-SA 3.0' };
+    if (/davidrumsey\.com\//.test(rid)) {
+      const ys = (ctx.pairs || []).filter(p => /^(date|pub date)$/i.test(p.label)).flatMap(p => p.values.map(v => parseYear(v, 'first'))).filter(Boolean);
+      return ys.length && ys.every(y => y.end <= 1929)
+        ? { license: 'open', text: 'David Rumsey Map Collection, CC BY-NC-SA 3.0' }
+        : { license: 'local', text: 'David Rumsey Map Collection: published after 1929, may still be in copyright' };
+    }
     const vals = [].concat(texts(man.rights), texts(man.license), texts(man.attribution), man.requiredStatement ? texts(man.requiredStatement.value) : []);
     for (const p of ctx.pairs || []) if (/right|terms of use|gebruik en reproductie|licen[cs]e|copyright|rechten|beperking/i.test(p.label)) vals.push(...p.values);
     if (ctx.nls && ctx.nls.reuse) {
-      // NLS partner scans such as 'CC-BY (BL). British Library permission must be sought…' are not open
-      if (/permission/i.test(ctx.nls.reuse)) return { license: 'local', text: clean(ctx.nls.reuse).slice(0, 160) };
+      const tag = (ctx.nls.reuse.match(/\(([^)]+)\)/) || [])[1];
+      if (/permission/i.test(ctx.nls.reuse) || !tag || !NLS_OPEN_TAGS.test(tag.trim())) return { license: 'local', text: clean(ctx.nls.reuse).slice(0, 160) };
       vals.push(ctx.nls.reuse);
     }
     const joined = vals.map(clean).join(' | ');
     if (!joined) return { license: 'local', text: null };
-    if (CC_NC.test(joined) && !NO_DERIV.test(joined)) return { license: 'open', text: joined.slice(0, 160) };
-    if (NC_RIGHTS.test(joined) && !OPEN_RIGHTS.test(joined)) return { license: 'local', text: joined.slice(0, 160) };
-    if (OPEN_RIGHTS.test(joined)) return { license: 'open', text: joined.slice(0, 160) };
+    // ND or In Copyright anywhere overrides any 'public domain' or 'no known restrictions' phrase
+    if (NO_DERIV.test(joined) || IN_COPYRIGHT.test(joined)) return { license: 'local', text: joined.slice(0, 160) };
+    if (CC_NC.test(joined) || OPEN_RIGHTS.test(joined)) return { license: 'open', text: joined.slice(0, 160) };
     return { license: 'local', text: joined.slice(0, 160) };
   }
 
@@ -278,7 +304,13 @@
     const h1 = (html.match(/<h1 id="pageTitle"[^>]*>([\s\S]*?)<\/h1>/) || [])[1] || '';
     let title = (h1.match(/Title:\s*<\/strong>([\s\S]*?)<br/i) || [])[1];
     let date = (h1.match(/Date:\s*<\/strong>([\s\S]*?)(&nbsp;|<a|<br|$)/i) || [])[1];
-    if (!title) { const m = h1.match(/<strong>([\s\S]*?)<\/strong>\s*<br\s*\/?>([\s\S]*?)<br/i); if (m) { title = m[1]; date = date || m[2]; } }
+    if (!title) {
+      const m = h1.match(/<strong>([\s\S]*?)<\/strong>\s*<br\s*\/?>([\s\S]*?)<br/i);
+      // the edition on screen is the last Published/Printed date, not the survey years that come first
+      if (m) { title = m[1]; const ed = clean(m[2]).match(/.*(?:Published|Printed):\s*((?:ca\.\s*)?\d{4}(?:\s*to\s*\d{4})?)/i); date = date || (ed ? ed[1] : m[2]); }
+    }
+    // atlas pages: '<strong>Blaeu Atlas Maior 1662-5, Volume 6<br />Coila Provincia</strong><br /><a …>[more info]</a>'
+    if (!title) { const m = h1.match(/<strong>([\s\S]*?)<\/strong>/i); const last = m && m[1].split(/<br\s*\/?>/i).pop(); if (last && !/:\s*$/.test(clean(last))) title = last; }
     const series = ((html.match(/<title>View map:([^<]*)<\/title>/i) || [])[1] || '').split(' - ').pop();
     const desc = (html.match(/<meta name="Description" content="([^"]*)"/i) || [])[1];
     const pub = desc && (desc.match(/published in ([^,]+)/i) || [])[1];
@@ -313,7 +345,7 @@
     const t = extractTitle(ctx);
     const inst = extractInstitution(ctx);
     return {
-      id: map.id, title: t && t.title, titleSrc: t && t.src,
+      id: map.id, title: t && t.title, titleSrc: t && t.src, series: nls && nls.series,
       year: y && y.year, depictedYear: depictedYear(t && t.title, y), yearStart: y && y.start, yearEnd: y && y.end, approx: y && y.approx, yearSrc: y && y.src, yearText: y && y.text, when: whenLt(y),
       institution: inst && inst.name, institutionSrc: inst && inst.src,
       link: extractLink(ctx), rights: extractRights(ctx)
@@ -332,30 +364,35 @@
   const M = root.AllmapsMeta;
   const API = 'https://api.allmaps.org/maps';
   const TILES = 'https://allmaps.xyz/maps';
-  const CACHE = 'tm.allmaps.v4';
+  const CACHE = 'tm.allmaps.v6';
   const MAX_AREA = 1e11;   // m²: island-of-Ireland size or smaller (world and continent maps are left out)
   const CANDIDATES = 30;   // the most detailed maps first (the API sorts by scale)
   const DAY = 864e5;
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  try { Object.keys(localStorage).filter((k) => /^tm\.allmaps\.v\d+$/.test(k) && k !== CACHE).forEach((k) => localStorage.removeItem(k)); } catch { /* no storage */ }
 
+  // The app hangs its Leaflet layer on an entry as _layer: never store such runtime fields.
+  const noPrivate = (k, v) => (k[0] === '_' ? undefined : v);
   // api.allmaps.org sends "Vary: *", so the browser cannot cache it: keep results per place ourselves.
   function cacheGet(key) {
     try {
-      const c = JSON.parse(localStorage.getItem(CACHE) || '{}');
+      const c = JSON.parse(localStorage.getItem(CACHE) || '{}', noPrivate);
       const e = c[key];
-      return e && Date.now() - e.t < 7 * DAY ? e.v : null;
+      return e && Date.now() - e.t < (e.ttl || 7 * DAY) ? e.v : null;
     } catch { return null; }
   }
-  function cacheSet(key, v) {
+  function cacheSet(key, v, ttl) {
     try {
       const c = JSON.parse(localStorage.getItem(CACHE) || '{}');
-      c[key] = { t: Date.now(), v };
+      c[key] = { t: Date.now(), v, ttl };
       const keys = Object.keys(c).sort((a, b) => c[a].t - c[b].t);
       while (keys.length > 25) delete c[keys.shift()];
-      localStorage.setItem(CACHE, JSON.stringify(c));
+      localStorage.setItem(CACHE, JSON.stringify(c, noPrivate));
     } catch { /* storage full or blocked: no cache */ }
   }
 
+  // null = a definite "no" (404 and the like); a timeout, network error, 429 or 5xx throws,
+  // so that a search with such failures is not cached as "nothing here".
   async function get(url, { text = false, ms = 12000 } = {}) {
     const ctl = new AbortController();
     const t = setTimeout(() => ctl.abort(), ms);
@@ -363,9 +400,13 @@
       const r = await fetch(url.replace(/^http:\/\//, 'https://'), {
         signal: ctl.signal, headers: { Accept: 'application/ld+json, application/json;q=0.9, */*;q=0.1' },
       });
-      if (!r.ok) return null;
-      return text ? await r.text() : await r.json();
-    } catch { return null; } finally { clearTimeout(t); }
+      if (!r.ok) {
+        if (r.status === 429 || r.status >= 500) throw new Error(`HTTP ${r.status}`);
+        return null;
+      }
+      if (text) return await r.text();
+      try { return await r.json(); } catch { return null; } // not JSON: a definite "no"
+    } finally { clearTimeout(t); }
   }
 
   // David Rumsey allows 5 requests a second: space them out.
@@ -417,18 +458,22 @@
 
   // allmaps.xyz answers 200 with a transparent tile when it cannot read the source scan:
   // decode one tile at the place and look for any visible pixel.
+  // true = image, false = blank or missing, null = could not check (timeout, server error).
   async function tileHasImage(id, lat, lng, z) {
     const n = 2 ** z;
     const x = Math.floor(((lng + 180) / 360) * n);
     const s = Math.sin((lat * Math.PI) / 180);
     const y = Math.floor((0.5 - Math.log((1 + s) / (1 - s)) / (4 * Math.PI)) * n);
+    const ctl = new AbortController();
+    const t = setTimeout(() => ctl.abort(), 20000);
+    let blob;
     try {
-      const ctl = new AbortController();
-      const t = setTimeout(() => ctl.abort(), 20000);
       const res = await fetch(`${TILES}/${id}/${z}/${x}/${y}.png`, { signal: ctl.signal });
-      clearTimeout(t);
-      if (!res.ok) return false;
-      const bmp = await createImageBitmap(await res.blob());
+      if (!res.ok) return res.status === 429 || res.status >= 500 ? null : false;
+      blob = await res.blob();
+    } catch { return null; } finally { clearTimeout(t); }
+    try {
+      const bmp = await createImageBitmap(blob);
       const c = document.createElement('canvas');
       c.width = c.height = 32;
       const g = c.getContext('2d');
@@ -436,7 +481,24 @@
       const a = g.getImageData(0, 0, 32, 32).data;
       for (let i = 3; i < a.length; i += 4) if (a[i] > 16) return true;
       return false;
-    } catch { return false; }
+    } catch { return false; } // not an image
+  }
+
+  // A georeference needs enough distinct, non-collinear control points for its transformation.
+  function gcpsOk(map) {
+    const t = map.transformation || {};
+    const order = (t.options && t.options.order) || 1;
+    const need = t.type === 'helmert' ? 2 : t.type === 'polynomial' ? [0, 3, 6, 10][order] || 3 : 3;
+    const pts = [...new Map((map.gcps || []).filter((g) => Array.isArray(g.geo)).map((g) => [g.geo.map((v) => (+v).toFixed(6)).join(','), g.geo])).values()];
+    if (pts.length < need) return false;
+    if (need < 3) return true;
+    // collinear points: take the farthest pair, then the largest offset from that line
+    const [a] = pts;
+    const b = pts.reduce((p, q) => (Math.hypot(q[0] - a[0], q[1] - a[1]) > Math.hypot(p[0] - a[0], p[1] - a[1]) ? q : p), a);
+    const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
+    if (!len) return false;
+    const off = Math.max(...pts.map((p) => Math.abs((b[0] - a[0]) * (a[1] - p[1]) - (a[0] - p[0]) * (b[1] - a[1])) / len));
+    return off / len > 1e-3;
   }
 
   const escHtml = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -462,12 +524,18 @@
     if (!tj || !Array.isArray(tj.bounds)) return null;
     const area = map._allmaps && map._allmaps.area;
     // A one-inch OS sheet covers ~1.5e9 m²; one spread over a region is a bad georeference.
-    if (/one-inch|six-inch|25-inch|1:63,?360|1:10,?560|1:2,?500\b/i.test(d.title || '') && area > 4e9) return null;
-    const zoom = zoomForArea(area, lat);
-    if (!(await tileHasImage(id, lat, lng, Math.min(tj.maxzoom || 17, zoom)))) return null;
+    if (/one-inch|six-inch|25-inch|1:63,?360|1:10,?560|1:2,?500\b/i.test(`${d.title || ''} ${d.series || ''}`) && area > 4e9) return null;
+    // A warped extent far larger than the map's own area means a folded or degenerate warp.
     const [W, S, E, N] = tj.bounds;
+    const R = 6371008.8, rad = Math.PI / 180;
+    const boxArea = R * R * Math.abs((E - W) * rad) * Math.abs(Math.sin(N * rad) - Math.sin(S * rad));
+    if (area && boxArea / area > 100) return null;
+    const zoom = zoomForArea(area, lat);
+    const has = await tileHasImage(id, lat, lng, Math.min(tj.maxzoom || 17, zoom));
+    if (has === null) throw new Error('tile check failed');
+    if (!has) return null;
     const year = d.depictedYear || d.year;
-    const when = d.depictedYear ? `${d.depictedYear} (išl. ${d.yearStart})` : d.when.replace(/ m\.$/, '');
+    const when = d.depictedYear ? `${d.depictedYear} m. (išl. ${d.yearStart} m.)` : d.when.replace(/ m\.$/, '');
     const title = d.title || 'Senasis žemėlapis';
     const inst = d.institution || 'Allmaps';
     const link = safeUrl(d.link && d.link.url);
@@ -486,16 +554,25 @@
   }
 
   // Calls onMap(entry) for each usable map as soon as it is ready; resolves with all of them.
-  async function find(lat, lng, onMap) {
+  // Only these can give a year: a manifest we can fetch, an NLS record page, or labels in resource.partOf.
+  function describable(m) {
+    const r = m.resource || {};
+    return !!(manifestUrlFor(m) || /map-view\.nls\.uk\/iiif\//.test(String(r.id)) || (Array.isArray(r.partOf) && r.partOf.length));
+  }
+
+  // Calls onMap(entry) for each usable map as soon as it is ready; resolves with all of them.
+  // Rejects when the Allmaps API itself cannot be reached. Stops early once `signal` is aborted.
+  async function find(lat, lng, onMap, signal) {
     const key = `${lat.toFixed(3)},${lng.toFixed(3)}`;
     const cached = cacheGet(key);
     if (cached) { cached.forEach(onMap); return cached; }
     const list = await get(`${API}?intersects=${lat},${lng}&maxArea=${MAX_AREA}&limit=200`, { ms: 20000 });
-    if (!Array.isArray(list)) return [];
+    if (!Array.isArray(list)) throw new Error('Allmaps API');
     // The same scan can be georeferenced twice: key on image size and file name.
     const seen = new Set();
     const cands = [];
     for (const m of list) {
+      if (!describable(m) || !gcpsOk(m)) continue; // e.g. image services with no manifest link
       const r = m.resource || {};
       const k = `${r.width}x${r.height}:${String(r.id).split(/[/:]/).pop()}`;
       if (seen.has(k)) continue;
@@ -504,18 +581,20 @@
       if (cands.length >= CANDIDATES) break;
     }
     const out = [];
-    let next = 0;
+    let next = 0, transient = false;
+    const aborted = () => !!(signal && signal.aborted);
     const worker = async () => {
-      while (next < cands.length) {
+      while (next < cands.length && !aborted()) {
         const m = cands[next++];
         try {
           const e = await build(m, lat, lng);
-          if (e) { out.push(e); onMap(e); }
-        } catch { /* one bad record must not stop the others */ }
+          if (e && !aborted()) { out.push(e); onMap(e); }
+        } catch { transient = true; /* one bad record must not stop the others */ }
       }
     };
     await Promise.all([worker(), worker(), worker()]);
-    cacheSet(key, out);
+    // a partial answer (timeouts, server errors) is kept for an hour only, then searched again
+    if (!aborted()) cacheSet(key, out, transient ? DAY / 24 : undefined);
     return out;
   }
 
